@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="CCSIA - A Inteligência Artificial da Caixinha do Saber"
+    >
+
+    <title>CCSIA - Caixinha do Saber</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- BARRA LATERAL -->
+        <aside class="sidebar">
+
+            <div class="brand">
+
+                <div class="brand-icon">
+                    🧠
+                </div>
+
+                <div>
+                    <h1>CCSIA</h1>
+                    <span>Caixinha do Saber</span>
+                </div>
+
+            </div>
+
+            <button class="new-chat" id="newChatButton">
+                <span>＋</span>
+                Nova conversa
+            </button>
+
+            <div class="sidebar-info">
+
+                <div class="info-card">
+                    <span class="info-icon">🎓</span>
+
+                    <div>
+                        <strong>Educação</strong>
+                        <p>Aprenda de forma simples.</p>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <span class="info-icon">💡</span>
+
+                    <div>
+                        <strong>Conhecimento</strong>
+                        <p>Explore novos assuntos.</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="creator">
+
+                <span>Projeto criado por</span>
+
+                <strong>Equipe Aerosmith</strong>
+
+            </div>
+
+        </aside>
+
+
+        <!-- ÁREA PRINCIPAL -->
+        <main class="chat-area">
+
+            <!-- CABEÇALHO -->
+            <header class="topbar">
+
+                <div class="mobile-brand">
+
+                    <div class="brand-icon small">
+                        🧠
+                    </div>
+
+                    <div>
+                        <strong>CCSIA</strong>
+                        <span>Caixinha do Saber</span>
+                    </div>
+
+                </div>
+
+                <div class="status">
+
+                    <span class="status-dot"></span>
+
+                    <span>CCSIA online</span>
+
+                </div>
+
+            </header>
+
+
+            <!-- CONTEÚDO DO CHAT -->
+            <section class="chat-content" id="chatContent">
+
+                <!-- TELA INICIAL -->
+                <div class="welcome" id="welcome">
+
+                    <div class="welcome-icon">
+                        🧠
+                    </div>
+
+                    <h2>Olá! Eu sou a CCSIA.</h2>
+
+                    <p>
+                        A Inteligência Artificial da
+                        <strong>Caixinha do Saber</strong>.
+                    </p>
+
+                    <span class="welcome-description">
+                        Faça uma pergunta e comece a aprender.
+                    </span>
+
+
+                    <!-- SUGESTÕES -->
+                    <div class="suggestions">
+
+                        <button
+                            class="suggestion"
+                            data-question="Explique a matemática de uma forma simples."
+                        >
+                            <span>📐</span>
+                            <div>
+                                <strong>Matemática</strong>
+                                <small>Aprenda um conceito</small>
+                            </div>
+                        </button>
+
+
+                        <button
+                            class="suggestion"
+                            data-question="Explique o que foi a Revolução Industrial."
+                        >
+                            <span>🌎</span>
+                            <div>
+                                <strong>História</strong>
+                                <small>Conheça acontecimentos</small>
+                            </div>
+                        </button>
+
+
+                        <button
+                            class="suggestion"
+                            data-question="Explique como funciona a programação para iniciantes."
+                        >
+                            <span>💻</span>
+                            <div>
+                                <strong>Tecnologia</strong>
+                                <small>Descubra como funciona</small>
+                            </div>
+                        </button>
+
+
+                        <button
+                            class="suggestion"
+                            data-question="Explique o que é inteligência artificial."
+                        >
+                            <span>🤖</span>
+                            <div>
+                                <strong>IA</strong>
+                                <small>Entenda a tecnologia</small>
+                            </div>
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ÁREA DE DIGITAÇÃO -->
+            <div class="input-area">
+
+                <div class="input-container">
+
+                    <textarea
+                        id="messageInput"
+                        placeholder="Digite sua pergunta para a CCSIA..."
+                        rows="1"
+                    ></textarea>
+
+                    <button
+                        id="sendButton"
+                        class="send-button"
+                        aria-label="Enviar pergunta"
+                    >
+                        ➤
+                    </button>
+
+                </div>
+
+                <p class="disclaimer">
+                    A CCSIA pode cometer erros. Sempre verifique informações importantes.
+                </p>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
