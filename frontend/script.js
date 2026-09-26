@@ -4,7 +4,101 @@ const sendButton = document.getElementById("sendButton");
 const newChatButton = document.getElementById("newChatButton");
 const welcome = document.getElementById("welcome");
 
+
+// ==========================================
+// CONVERTE A RESPOSTA DA IA EM HTML BONITO
+// ==========================================
+
+function formatAIResponse(text) {
+
+    // Protege o texto contra HTML
+    let formatted = text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+
+    // Títulos
+    formatted = formatted.replace(
+        /^### (.+)$/gm,
+        "<h3>$1</h3>"
+    );
+
+    formatted = formatted.replace(
+        /^## (.+)$/gm,
+        "<h2>$1</h2>"
+    );
+
+    formatted = formatted.replace(
+        /^# (.+)$/gm,
+        "<h1>$1</h1>"
+    );
+
+    // Negrito
+    formatted = formatted.replace(
+        /\*\*(.+?)\*\*/g,
+        "<strong>$1</strong>"
+    );
+
+    // Itálico
+    formatted = formatted.replace(
+        /(?<!\*)\*([^*\n]+)\*(?!\*)/g,
+        "<em>$1</em>"
+    );
+
+    // Código
+    formatted = formatted.replace(
+        /`([^`]+)`/g,
+        "<code>$1</code>"
+    );
+
+    // Listas com "-"
+    formatted = formatted.replace(
+        /^[•\-] (.+)$/gm,
+        "<li>$1</li>"
+    );
+
+    // Junta listas consecutivas
+    formatted = formatted.replace(
+        /(<li>.*<\/li>\n?)+/g,
+        function(match) {
+            return "<ul>" + match + "</ul>";
+        }
+    );
+
+    // Quebras de linha
+    formatted = formatted.replace(
+        /\n/g,
+        "<br>"
+    );
+
+    // Remove <br> imediatamente depois de títulos
+    formatted = formatted.replace(
+        /(<\/h[1-3]>)<br>/g,
+        "$1"
+    );
+
+    // Remove <br> antes de listas
+    formatted = formatted.replace(
+        /<br><ul>/g,
+        "<ul>"
+    );
+
+    // Remove <br> depois de listas
+    formatted = formatted.replace(
+        /<\/ul><br>/g,
+        "</ul>"
+    );
+
+    return formatted;
+}
+
+
+// ==========================================
+// ENVIAR MENSAGEM
+// ==========================================
+
 async function sendMessage() {
+
     const message = messageInput.value.trim();
 
     if (!message) return;
@@ -16,6 +110,7 @@ async function sendMessage() {
     addMessage(message, "user");
 
     messageInput.value = "";
+
     resetTextarea();
 
     sendButton.disabled = true;
@@ -23,7 +118,9 @@ async function sendMessage() {
     const loadingMessage = addLoadingMessage();
 
     try {
+
         const response = await fetch("/api/chat", {
+
             method: "POST",
 
             headers: {
@@ -40,12 +137,14 @@ async function sendMessage() {
         loadingMessage.remove();
 
         if (!response.ok) {
+
             addMessage(
                 "Desculpe, ocorreu um erro ao falar com a CCSIA.",
                 "ai"
             );
 
             console.error(data);
+
             return;
         }
 
@@ -69,12 +168,18 @@ async function sendMessage() {
 }
 
 
-// Adiciona uma mensagem no chat
+// ==========================================
+// ADICIONA UMA MENSAGEM
+// ==========================================
+
 function addMessage(text, type) {
 
     const message = document.createElement("div");
 
-    message.classList.add("message", type);
+    message.classList.add(
+        "message",
+        type
+    );
 
     const avatar = document.createElement("div");
 
@@ -90,24 +195,48 @@ function addMessage(text, type) {
             ? "🧠"
             : "👤";
 
+
     const content = document.createElement("div");
 
-    content.classList.add("message-content");
+    content.classList.add(
+        "message-content"
+    );
+
 
     const name = document.createElement("div");
 
-    name.classList.add("message-name");
+    name.classList.add(
+        "message-name"
+    );
 
     name.textContent =
         type === "ai"
             ? "CCSIA"
             : "Você";
 
+
     const textElement = document.createElement("div");
 
-    textElement.classList.add("message-text");
+    textElement.classList.add(
+        "message-text"
+    );
 
-    textElement.textContent = text;
+
+    // ==========================================
+    // AQUI ESTÁ A MUDANÇA PRINCIPAL
+    // ==========================================
+
+    if (type === "ai") {
+
+        textElement.innerHTML =
+            formatAIResponse(text);
+
+    } else {
+
+        textElement.textContent =
+            text;
+    }
+
 
     content.appendChild(name);
 
@@ -119,14 +248,19 @@ function addMessage(text, type) {
 
     chatContent.appendChild(message);
 
+
     chatContent.scrollTop =
         chatContent.scrollHeight;
+
 
     return message;
 }
 
 
-// Mensagem de carregamento
+// ==========================================
+// MENSAGEM DE CARREGAMENTO
+// ==========================================
+
 function addLoadingMessage() {
 
     const message = document.createElement("div");
@@ -135,6 +269,7 @@ function addLoadingMessage() {
         "message",
         "ai"
     );
+
 
     const avatar = document.createElement("div");
 
@@ -145,11 +280,13 @@ function addLoadingMessage() {
 
     avatar.textContent = "🧠";
 
+
     const content = document.createElement("div");
 
     content.classList.add(
         "message-content"
     );
+
 
     const name = document.createElement("div");
 
@@ -159,15 +296,20 @@ function addLoadingMessage() {
 
     name.textContent = "CCSIA";
 
+
     const text = document.createElement("div");
 
     text.classList.add(
         "message-text"
     );
 
+
     const typing = document.createElement("div");
 
-    typing.classList.add("typing");
+    typing.classList.add(
+        "typing"
+    );
+
 
     for (let i = 0; i < 3; i++) {
 
@@ -176,6 +318,7 @@ function addLoadingMessage() {
 
         typing.appendChild(dot);
     }
+
 
     text.appendChild(typing);
 
@@ -189,14 +332,19 @@ function addLoadingMessage() {
 
     chatContent.appendChild(message);
 
+
     chatContent.scrollTop =
         chatContent.scrollHeight;
+
 
     return message;
 }
 
 
-// Enter envia a mensagem
+// ==========================================
+// ENTER ENVIA A MENSAGEM
+// ==========================================
+
 messageInput.addEventListener(
     "keydown",
     function(event) {
@@ -214,14 +362,20 @@ messageInput.addEventListener(
 );
 
 
-// Botão enviar
+// ==========================================
+// BOTÃO ENVIAR
+// ==========================================
+
 sendButton.addEventListener(
     "click",
     sendMessage
 );
 
 
-// Ajusta altura do campo
+// ==========================================
+// AJUSTA ALTURA DO CAMPO
+// ==========================================
+
 messageInput.addEventListener(
     "input",
     function() {
@@ -244,7 +398,10 @@ function resetTextarea() {
 }
 
 
-// Sugestões
+// ==========================================
+// SUGESTÕES
+// ==========================================
+
 document.addEventListener(
     "click",
     function(event) {
@@ -271,11 +428,15 @@ document.addEventListener(
 );
 
 
-// Nova conversa
+// ==========================================
+// NOVA CONVERSA
+// ==========================================
+
 newChatButton.addEventListener(
     "click",
     function() {
 
         location.reload();
+
     }
 );
