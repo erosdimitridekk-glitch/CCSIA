@@ -74,7 +74,7 @@ body {
     background: linear-gradient(
         135deg,
         #6366f1,
-        #8b5cf6
+        #8B4513
     );
 
     display: flex;
@@ -113,7 +113,7 @@ body {
     background: linear-gradient(
         135deg,
         var(--primary),
-        #8b5cf6
+        #8B4513
     );
 
     color: white;
@@ -329,7 +329,7 @@ body {
     background: linear-gradient(
         135deg,
         #6366f1,
-        #8b5cf6
+        #8B4513
     );
 
     display: flex;
@@ -495,7 +495,7 @@ body {
     background: linear-gradient(
         135deg,
         #6366f1,
-        #8b5cf6
+        ##8B4513
     );
 
     color: white;
