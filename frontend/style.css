@@ -56,7 +56,7 @@ body {
     flex-direction: column;
 }
 
-/* LOGO */
+/* LOGO DA LATERAL */
 
 .brand {
     display: flex;
@@ -98,7 +98,9 @@ body {
     margin-top: 3px;
 }
 
+/* ============================= */
 /* NOVA CONVERSA */
+/* ============================= */
 
 .new-chat {
     width: 100%;
@@ -132,7 +134,9 @@ body {
         0 10px 22px rgba(139, 69, 19, 0.3);
 }
 
+/* ============================= */
 /* CARDS */
+/* ============================= */
 
 .sidebar-info {
     margin-top: 25px;
@@ -182,7 +186,9 @@ body {
     color: var(--muted);
 }
 
+/* ============================= */
 /* CRIADOR */
+/* ============================= */
 
 .creator {
     margin-top: auto;
@@ -230,7 +236,9 @@ body {
         var(--background);
 }
 
+/* ============================= */
 /* TOPO */
+/* ============================= */
 
 .topbar {
     height: 70px;
@@ -286,7 +294,9 @@ body {
     padding: 50px 25px;
 }
 
+/* ============================= */
 /* TELA INICIAL */
+/* ============================= */
 
 .welcome {
     width: 100%;
@@ -298,29 +308,49 @@ body {
     text-align: center;
 }
 
+
+/* ============================= */
+/* NOVA LOGO CCSIA */
+/* ============================= */
+
 .welcome-icon {
-    width: 90px;
-    height: 90px;
+    width: 150px;
+    height: 150px;
 
-    margin: 0 auto 25px;
-
-    border-radius: 27px;
-
-    background: linear-gradient(
-        135deg,
-        #8B4513,
-        #6F3410
-    );
+    margin: 0 auto 20px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    font-size: 43px;
+    background: transparent;
 
-    box-shadow:
-        0 18px 40px rgba(139, 69, 19, 0.25);
+    border-radius: 0;
+
+    box-shadow: none;
+
+    overflow: visible;
 }
+
+.welcome-icon img {
+    width: 150px;
+    height: 150px;
+
+    object-fit: contain;
+
+    display: block;
+
+    filter:
+        drop-shadow(
+            0 12px 18px
+            rgba(91, 46, 12, 0.20)
+        );
+}
+
+
+/* ============================= */
+/* TEXTO DE BOAS-VINDAS */
+/* ============================= */
 
 .welcome h2 {
     font-family: "Poppins", sans-serif;
@@ -499,7 +529,9 @@ body {
     margin-bottom: 6px;
 }
 
+/* ============================= */
 /* RESPOSTA DA IA */
+/* ============================= */
 
 .message-text {
     padding: 15px 18px;
@@ -510,11 +542,11 @@ body {
 
     border-radius: 17px;
 
-    /*
-       Inter deixa textos longos
-       mais confortáveis para leitura.
-    */
-    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif;
 
     font-size: 15px;
 
@@ -532,7 +564,9 @@ body {
         0 4px 15px rgba(15, 23, 42, 0.03);
 }
 
+/* ============================= */
 /* TEXTO DO USUÁRIO */
+/* ============================= */
 
 .message.user .message-content {
     order: -1;
@@ -551,7 +585,11 @@ body {
 
     border-bottom-right-radius: 5px;
 
-    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif;
 
     font-size: 15px;
 
@@ -705,6 +743,7 @@ body {
     padding: 8px;
 
     display: flex;
+
     align-items: flex-end;
 
     box-shadow:
@@ -733,7 +772,11 @@ textarea {
 
     padding: 12px 13px;
 
-    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif;
 
     font-size: 14px;
 
@@ -745,7 +788,11 @@ textarea {
 textarea::placeholder {
     color: #94a3b8;
 
-    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif;
 }
 
 .send-button {
@@ -775,7 +822,9 @@ textarea::placeholder {
 }
 
 .send-button:hover {
-    transform: translateY(-2px) scale(1.03);
+    transform:
+        translateY(-2px)
+        scale(1.03);
 }
 
 .send-button:disabled {
@@ -862,13 +911,18 @@ textarea::placeholder {
         padding: 35px 14px;
     }
 
+    /* LOGO NO CELULAR */
+
     .welcome-icon {
-        width: 70px;
-        height: 70px;
+        width: 100px;
+        height: 100px;
 
-        border-radius: 21px;
+        margin-bottom: 15px;
+    }
 
-        font-size: 32px;
+    .welcome-icon img {
+        width: 100px;
+        height: 100px;
     }
 
     .welcome h2 {
@@ -891,6 +945,7 @@ textarea::placeholder {
 
     .message-text {
         font-size: 14px;
+
         line-height: 1.65;
     }
 
