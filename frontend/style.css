@@ -1,7 +1,3 @@
-body {
-    background: #f4f7ff;
-}
-
 * {
     margin: 0;
     padding: 0;
@@ -18,8 +14,18 @@ body {
     --border: #e2e8f0;
 }
 
+/* ============================= */
+/* BASE */
+/* ============================= */
+
+html,
 body {
-    font-family: Arial, Helvetica, sans-serif;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    font-family: "Poppins", "Segoe UI", Arial, sans-serif;
     background: var(--background);
     color: var(--text);
     height: 100vh;
@@ -107,8 +113,11 @@ body {
     color: white;
     padding: 14px;
     border-radius: 13px;
+
+    font-family: "Poppins", sans-serif;
     font-size: 14px;
     font-weight: 600;
+
     cursor: pointer;
     transition: 0.2s;
 
@@ -136,8 +145,11 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
+
     padding: 14px;
+
     border-radius: 14px;
+
     background: #f8fafc;
     border: 1px solid #eef2f7;
 }
@@ -151,17 +163,22 @@ body {
     justify-content: center;
 
     background: white;
+
     border-radius: 11px;
+
     font-size: 18px;
 }
 
 .info-card strong {
     font-size: 13px;
+    font-weight: 600;
 }
 
 .info-card p {
     margin-top: 3px;
+
     font-size: 11px;
+
     color: var(--muted);
 }
 
@@ -169,19 +186,27 @@ body {
 
 .creator {
     margin-top: auto;
+
     padding: 18px 10px 5px;
+
     border-top: 1px solid var(--border);
 }
 
 .creator span {
     display: block;
+
     color: var(--muted);
+
     font-size: 11px;
+
     margin-bottom: 5px;
 }
 
 .creator strong {
     font-size: 13px;
+
+    font-weight: 600;
+
     color: #334155;
 }
 
@@ -209,6 +234,7 @@ body {
 
 .topbar {
     height: 70px;
+
     padding: 0 30px;
 
     background: rgba(255, 255, 255, 0.85);
@@ -226,7 +252,9 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
+
     color: var(--muted);
+
     font-size: 12px;
 }
 
@@ -252,7 +280,9 @@ body {
 
 .chat-content {
     flex: 1;
+
     overflow-y: auto;
+
     padding: 50px 25px;
 }
 
@@ -260,8 +290,11 @@ body {
 
 .welcome {
     width: 100%;
+
     max-width: 900px;
+
     margin: auto;
+
     text-align: center;
 }
 
@@ -290,20 +323,30 @@ body {
 }
 
 .welcome h2 {
+    font-family: "Poppins", sans-serif;
+
     font-size: 32px;
+
+    font-weight: 600;
+
     margin-bottom: 10px;
+
     letter-spacing: -0.5px;
 }
 
 .welcome > p {
     color: var(--muted);
+
     font-size: 16px;
 }
 
 .welcome-description {
     display: block;
+
     margin-top: 7px;
+
     color: #94a3b8;
+
     font-size: 13px;
 }
 
@@ -313,6 +356,7 @@ body {
 
 .suggestions {
     width: 100%;
+
     margin-top: 35px;
 
     display: grid;
@@ -327,19 +371,25 @@ body {
 
 .suggestion {
     border: 1px solid var(--border);
+
     background: white;
 
     padding: 18px;
+
     border-radius: 17px;
 
     display: flex;
     align-items: center;
+
     gap: 14px;
 
     cursor: pointer;
+
     transition: 0.25s;
 
     color: var(--text);
+
+    font-family: "Poppins", sans-serif;
 
     box-shadow:
         0 4px 15px rgba(15, 23, 42, 0.03);
@@ -371,13 +421,19 @@ body {
 
 .suggestion strong {
     display: block;
+
     font-size: 14px;
+
+    font-weight: 600;
 }
 
 .suggestion small {
     display: block;
+
     margin-top: 5px;
+
     color: var(--muted);
+
     font-size: 11px;
 }
 
@@ -387,10 +443,12 @@ body {
 
 .message {
     max-width: 900px;
+
     margin: 0 auto 22px;
 
     display: flex;
     align-items: flex-start;
+
     gap: 12px;
 }
 
@@ -433,12 +491,18 @@ body {
 
 .message-name {
     color: var(--muted);
+
+    font-family: "Poppins", sans-serif;
+
     font-size: 11px;
+
     margin-bottom: 6px;
 }
 
+/* RESPOSTA DA IA */
+
 .message-text {
-    padding: 14px 17px;
+    padding: 15px 18px;
 
     background: white;
 
@@ -446,14 +510,29 @@ body {
 
     border-radius: 17px;
 
-    font-size: 14px;
-    line-height: 1.6;
+    /*
+       Inter deixa textos longos
+       mais confortáveis para leitura.
+    */
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+
+    font-size: 15px;
+
+    font-weight: 400;
+
+    line-height: 1.7;
+
+    letter-spacing: -0.01em;
 
     white-space: pre-wrap;
+
+    color: #1e293b;
 
     box-shadow:
         0 4px 15px rgba(15, 23, 42, 0.03);
 }
+
+/* TEXTO DO USUÁRIO */
 
 .message.user .message-content {
     order: -1;
@@ -471,10 +550,83 @@ body {
     border: none;
 
     border-bottom-right-radius: 5px;
+
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+
+    font-size: 15px;
+
+    line-height: 1.6;
 }
 
 .message.ai .message-text {
     border-bottom-left-radius: 5px;
+}
+
+/* ============================= */
+/* FORMATAÇÃO DAS RESPOSTAS */
+/* ============================= */
+
+.message-text strong {
+    font-weight: 700;
+}
+
+.message-text em {
+    font-style: italic;
+}
+
+.message-text h1,
+.message-text h2,
+.message-text h3 {
+    font-family: "Poppins", sans-serif;
+
+    margin-top: 14px;
+
+    margin-bottom: 8px;
+
+    color: #6F3410;
+
+    font-weight: 600;
+}
+
+.message-text h1 {
+    font-size: 21px;
+}
+
+.message-text h2 {
+    font-size: 18px;
+}
+
+.message-text h3 {
+    font-size: 16px;
+}
+
+.message-text p {
+    margin: 5px 0;
+}
+
+.message-text ul,
+.message-text ol {
+    margin: 8px 0;
+
+    padding-left: 22px;
+}
+
+.message-text li {
+    margin: 4px 0;
+}
+
+.message-text code {
+    background: #F5E9E0;
+
+    color: #6F3410;
+
+    padding: 2px 6px;
+
+    border-radius: 5px;
+
+    font-family: Consolas, monospace;
+
+    font-size: 13px;
 }
 
 /* ============================= */
@@ -483,8 +635,11 @@ body {
 
 .typing {
     display: flex;
+
     gap: 5px;
+
     align-items: center;
+
     padding: 5px 0;
 }
 
@@ -538,6 +693,7 @@ body {
 
 .input-container {
     max-width: 900px;
+
     margin: auto;
 
     background: white;
@@ -570,11 +726,14 @@ textarea {
     resize: none;
 
     border: none;
+
     outline: none;
 
     background: transparent;
 
     padding: 12px 13px;
+
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
 
     font-size: 14px;
 
@@ -585,6 +744,8 @@ textarea {
 
 textarea::placeholder {
     color: #94a3b8;
+
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
 }
 
 .send-button {
@@ -619,7 +780,9 @@ textarea::placeholder {
 
 .send-button:disabled {
     opacity: 0.5;
+
     cursor: not-allowed;
+
     transform: none;
 }
 
@@ -629,6 +792,8 @@ textarea::placeholder {
     margin: 9px auto 0;
 
     text-align: center;
+
+    font-family: "Poppins", sans-serif;
 
     font-size: 10px;
 
@@ -672,6 +837,7 @@ textarea::placeholder {
 
     .mobile-brand strong {
         display: block;
+
         font-size: 14px;
     }
 
@@ -721,6 +887,11 @@ textarea::placeholder {
 
     .message-content {
         max-width: 82%;
+    }
+
+    .message-text {
+        font-size: 14px;
+        line-height: 1.65;
     }
 
     .input-area {
