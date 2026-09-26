@@ -1,744 +1,261 @@
-const chatContent =
-    document.getElementById("chatContent");
-
-const messageInput =
-    document.getElementById("messageInput");
-
-const sendButton =
-    document.getElementById("sendButton");
-
-const newChatButton =
-    document.getElementById("newChatButton");
-
-const welcome =
-    document.getElementById("welcome");
-
-const themeButton =
-    document.getElementById("themeButton");
-
-const menuButton =
-    document.getElementById("menuButton");
-
-const closeMenuButton =
-    document.getElementById("closeMenuButton");
-
-const menuOverlay =
-    document.getElementById("menuOverlay");
-
-const sidebar =
-    document.getElementById("sidebar");
-
-const historyList =
-    document.getElementById("historyList");
-
-
-/* ================================= */
-/* FORMATAÇÃO DA RESPOSTA */
-/* ================================= */
-
-function formatAIResponse(text) {
-
-    let formatted = text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
+<!DOCTYPE html>
+<html lang="pt-BR">
 
-    formatted =
-        formatted.replace(
-            /^### (.+)$/gm,
-            "<h3>$1</h3>"
-        );
+<head>
+    <meta charset="UTF-8">
 
-    formatted =
-        formatted.replace(
-            /^## (.+)$/gm,
-            "<h2>$1</h2>"
-        );
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    formatted =
-        formatted.replace(
-            /^# (.+)$/gm,
-            "<h1>$1</h1>"
-        );
+    <meta
+        name="description"
+        content="CCSIA - A Inteligência Artificial da Caixinha do Saber"
+    >
 
-    formatted =
-        formatted.replace(
-            /\*\*(.+?)\*\*/g,
-            "<strong>$1</strong>"
-        );
+    <title>CCSIA - Caixinha do Saber</title>
 
-    formatted =
-        formatted.replace(
-            /(?<!\*)\*([^*\n]+)\*(?!\*)/g,
-            "<em>$1</em>"
-        );
+    <link rel="preconnect" href="https://fonts.googleapis.com">
 
-    formatted =
-        formatted.replace(
-            /`([^`]+)`/g,
-            "<code>$1</code>"
-        );
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
 
-    formatted =
-        formatted.replace(
-            /^[•\-] (.+)$/gm,
-            "<li>$1</li>"
-        );
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
 
-    formatted =
-        formatted.replace(
-            /(<li>.*<\/li>\n?)+/g,
-            function(match) {
-                return "<ul>" + match + "</ul>";
-            }
-        );
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+</head>
 
-    formatted =
-        formatted.replace(/\n/g, "<br>");
 
-    formatted =
-        formatted.replace(
-            /(<\/h[1-3]>)<br>/g,
-            "$1"
-        );
+<body>
 
-    formatted =
-        formatted.replace(
-            /<br><ul>/g,
-            "<ul>"
-        );
+    <div class="app">
 
-    formatted =
-        formatted.replace(
-            /<\/ul><br>/g,
-            "</ul>"
-        );
+        <!-- ================================= -->
+        <!-- SIDEBAR -->
+        <!-- ================================= -->
 
-    return formatted;
-}
+        <aside
+            class="sidebar"
+            id="sidebar"
+        >
 
+            <div class="sidebar-header">
 
-/* ================================= */
-/* AVATAR */
-/* ================================= */
+                <img
+                    src="logo.png"
+                    alt="CCSIA - Caixinha do Saber"
+                    class="sidebar-logo"
+                >
 
-function createAvatar(type) {
+                <button
+                    id="closeMenuButton"
+                    class="close-menu"
+                    aria-label="Fechar menu"
+                >
+                    ✕
+                </button>
 
-    const avatar =
-        document.createElement("div");
+            </div>
 
-    avatar.classList.add(
-        "message-avatar",
-        type === "ai"
-            ? "ai-avatar"
-            : "user-avatar"
-    );
 
-    if (type === "ai") {
+            <!-- NOVA CONVERSA -->
 
-        const logo =
-            document.createElement("img");
+            <button
+                class="new-chat"
+                id="newChatButton"
+            >
 
-        logo.src = "logo.png";
+                <span>＋</span>
 
-        logo.alt =
-            "Logo da CCSIA";
+                Nova conversa
 
-        avatar.appendChild(logo);
+            </button>
 
-    } else {
 
-        avatar.textContent = "👤";
+            <!-- ================================= -->
+            <!-- HISTÓRICO -->
+            <!-- ================================= -->
 
-    }
+            <div class="history-section">
 
-    return avatar;
-}
+                <div class="history-title">
+                    Conversas
+                </div>
 
 
-/* ================================= */
-/* BOTÃO COPIAR */
-/* ================================= */
+                <div
+                    class="history-list"
+                    id="historyList"
+                >
 
-function createCopyButton(text) {
+                </div>
 
-    const copyButton =
-        document.createElement("button");
+            </div>
 
-    copyButton.classList.add(
-        "copy-button"
-    );
 
-    copyButton.type = "button";
+            <!-- ================================= -->
+            <!-- INFORMAÇÕES -->
+            <!-- ================================= -->
 
-    copyButton.innerHTML =
-        "📋 Copiar";
+            <div class="sidebar-info">
 
+                <div class="info-card">
 
-    copyButton.addEventListener(
-        "click",
-        async function() {
+                    <span class="info-icon">
+                        🎓
+                    </span>
 
-            try {
+                    <div>
 
-                await navigator.clipboard
-                    .writeText(text);
+                        <strong>
+                            Educação
+                        </strong>
 
-                copyButton.innerHTML =
-                    "✓ Copiado!";
+                        <p>
+                            Aprenda de forma simples.
+                        </p>
 
-                copyButton.classList.add(
-                    "copied"
-                );
+                    </div>
 
+                </div>
 
-                setTimeout(
-                    function() {
 
-                        copyButton.innerHTML =
-                            "📋 Copiar";
+                <div class="info-card">
 
-                        copyButton.classList.remove(
-                            "copied"
-                        );
+                    <span class="info-icon">
+                        💡
+                    </span>
 
-                    },
-                    2000
-                );
+                    <div>
 
-            } catch (error) {
+                        <strong>
+                            Conhecimento
+                        </strong>
 
-                console.error(
-                    "Não foi possível copiar:",
-                    error
-                );
+                        <p>
+                            Explore novos assuntos.
+                        </p>
 
-                copyButton.innerHTML =
-                    "❌ Erro";
+                    </div>
 
+                </div>
 
-                setTimeout(
-                    function() {
+            </div>
 
-                        copyButton.innerHTML =
-                            "📋 Copiar";
 
-                    },
-                    2000
-                );
+            <!-- CRIADOR -->
 
-            }
+            <div class="creator">
 
-        }
-    );
+                <span>
+                    Projeto criado por
+                </span>
 
-    return copyButton;
-}
+                <strong>
+                    Equipe do Eros Dimitri
+                </strong>
 
+            </div>
 
-/* ================================= */
-/* ENVIAR MENSAGEM */
-/* ================================= */
+        </aside>
 
-async function sendMessage() {
 
-    const message =
-        messageInput.value.trim();
+        <!-- FUNDO DO MENU MOBILE -->
 
+        <div
+            class="menu-overlay"
+            id="menuOverlay"
+        ></div>
 
-    if (!message) return;
 
+        <!-- ================================= -->
+        <!-- CHAT -->
+        <!-- ================================= -->
 
-    if (welcome) {
-        welcome.remove();
-    }
+        <main class="chat-area">
 
 
-    addMessage(
-        message,
-        "user"
-    );
+            <!-- TOPBAR -->
 
+            <header class="topbar">
 
-    messageInput.value = "";
 
-    resetTextarea();
+                <!-- BOTÃO MENU -->
 
-    sendButton.disabled = true;
+                <button
+                    id="menuButton"
+                    class="menu-button"
+                    aria-label="Abrir menu"
+                    title="Abrir menu"
+                >
+                    ☰
+                </button>
 
 
-    const loadingMessage =
-        addLoadingMessage();
+                <!-- LOGO MOBILE -->
 
+                <div class="mobile-brand">
 
-    try {
+                    <img
+                        src="logo.png"
+                        alt="CCSIA"
+                        class="mobile-logo"
+                    >
 
-        const response =
-            await fetch(
-                "/api/chat",
-                {
-                    method: "POST",
+                </div>
 
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
 
-                    body:
-                        JSON.stringify({
-                            message: message
-                        })
-                }
-            );
+                <div class="topbar-actions">
 
 
-        const data =
-            await response.json();
+                    <!-- TEMA -->
 
+                    <button
+                        id="themeButton"
+                        class="theme-button"
+                        aria-label="Ativar modo escuro"
+                        title="Modo escuro"
+                    >
+                        🌙
+                    </button>
 
-        loadingMessage.remove();
 
+                    <!-- STATUS -->
 
-        if (!response.ok) {
+                    <div class="status">
 
-            addMessage(
-                "Desculpe, ocorreu um erro ao falar com a CCSIA.",
-                "ai"
-            );
+                        <span class="status-dot"></span>
 
-            console.error(data);
+                        <span>
+                            CCSIA online
+                        </span>
 
-            return;
-        }
+                    </div>
 
+                </div>
 
-        await addTypingMessage(
-            data.answer,
-            "ai"
-        );
+            </header>
 
 
-    } catch (error) {
+            <!-- ================================= -->
+            <!-- ÁREA DAS MENSAGENS -->
+            <!-- ================================= -->
 
-        console.error(
-            "Erro:",
-            error
-        );
+            <section
+                class="chat-content"
+                id="chatContent"
+            >
 
-        loadingMessage.remove();
-
-
-        await addTypingMessage(
-            "Não consegui conectar ao servidor da CCSIA. Verifique se o servidor está funcionando.",
-            "ai"
-        );
-
-
-    } finally {
-
-        sendButton.disabled = false;
-
-    }
-}
-
-
-/* ================================= */
-/* ADICIONAR MENSAGEM */
-/* ================================= */
-
-function addMessage(text, type) {
-
-    const message =
-        document.createElement("div");
-
-    message.classList.add(
-        "message",
-        type
-    );
-
-
-    const avatar =
-        createAvatar(type);
-
-
-    const content =
-        document.createElement("div");
-
-    content.classList.add(
-        "message-content"
-    );
-
-
-    const name =
-        document.createElement("div");
-
-    name.classList.add(
-        "message-name"
-    );
-
-    name.textContent =
-        type === "ai"
-            ? "CCSIA"
-            : "Você";
-
-
-    const textElement =
-        document.createElement("div");
-
-    textElement.classList.add(
-        "message-text"
-    );
-
-
-    if (type === "ai") {
-
-        textElement.innerHTML =
-            formatAIResponse(text);
-
-    } else {
-
-        textElement.textContent =
-            text;
-
-    }
-
-
-    content.appendChild(name);
-
-    content.appendChild(textElement);
-
-
-    if (type === "ai") {
-
-        const copyButton =
-            createCopyButton(text);
-
-        content.appendChild(
-            copyButton
-        );
-
-    }
-
-
-    message.appendChild(avatar);
-
-    message.appendChild(content);
-
-    chatContent.appendChild(message);
-
-
-    chatContent.scrollTop =
-        chatContent.scrollHeight;
-
-
-    return message;
-}
-
-
-/* ================================= */
-/* EFEITO DIGITANDO */
-/* ================================= */
-
-async function addTypingMessage(
-    text,
-    type
-) {
-
-    const message =
-        document.createElement("div");
-
-    message.classList.add(
-        "message",
-        type
-    );
-
-
-    const avatar =
-        createAvatar(type);
-
-
-    const content =
-        document.createElement("div");
-
-    content.classList.add(
-        "message-content"
-    );
-
-
-    const name =
-        document.createElement("div");
-
-    name.classList.add(
-        "message-name"
-    );
-
-    name.textContent =
-        "CCSIA";
-
-
-    const textElement =
-        document.createElement("div");
-
-    textElement.classList.add(
-        "message-text"
-    );
-
-
-    content.appendChild(name);
-
-    content.appendChild(
-        textElement
-    );
-
-
-    message.appendChild(avatar);
-
-    message.appendChild(content);
-
-    chatContent.appendChild(message);
-
-
-    let currentText = "";
-
-    const speed = 12;
-
-
-    for (
-        let i = 0;
-        i < text.length;
-        i++
-    ) {
-
-        currentText += text[i];
-
-
-        textElement.innerHTML =
-            formatAIResponse(
-                currentText
-            );
-
-
-        chatContent.scrollTop =
-            chatContent.scrollHeight;
-
-
-        await new Promise(
-            resolve =>
-                setTimeout(
-                    resolve,
-                    speed
-                )
-        );
-
-    }
-
-
-    const copyButton =
-        createCopyButton(text);
-
-
-    content.appendChild(
-        copyButton
-    );
-
-
-    chatContent.scrollTop =
-        chatContent.scrollHeight;
-
-
-    return message;
-}
-
-
-/* ================================= */
-/* LOADING */
-/* ================================= */
-
-function addLoadingMessage() {
-
-    const message =
-        document.createElement("div");
-
-    message.classList.add(
-        "message",
-        "ai"
-    );
-
-
-    const avatar =
-        createAvatar("ai");
-
-
-    const content =
-        document.createElement("div");
-
-    content.classList.add(
-        "message-content"
-    );
-
-
-    const name =
-        document.createElement("div");
-
-    name.classList.add(
-        "message-name"
-    );
-
-    name.textContent =
-        "CCSIA";
-
-
-    const text =
-        document.createElement("div");
-
-    text.classList.add(
-        "message-text"
-    );
-
-
-    const typing =
-        document.createElement("div");
-
-    typing.classList.add(
-        "typing"
-    );
-
-
-    for (
-        let i = 0;
-        i < 3;
-        i++
-    ) {
-
-        const dot =
-            document.createElement("span");
-
-        typing.appendChild(dot);
-
-    }
-
-
-    text.appendChild(typing);
-
-    content.appendChild(name);
-
-    content.appendChild(text);
-
-    message.appendChild(avatar);
-
-    message.appendChild(content);
-
-    chatContent.appendChild(message);
-
-
-    chatContent.scrollTop =
-        chatContent.scrollHeight;
-
-
-    return message;
-}
-
-
-/* ================================= */
-/* TEXTAREA */
-/* ================================= */
-
-messageInput.addEventListener(
-    "keydown",
-    function(event) {
-
-        if (
-            event.key === "Enter" &&
-            !event.shiftKey
-        ) {
-
-            event.preventDefault();
-
-            sendMessage();
-
-        }
-
-    }
-);
-
-
-sendButton.addEventListener(
-    "click",
-    sendMessage
-);
-
-
-messageInput.addEventListener(
-    "input",
-    function() {
-
-        this.style.height =
-            "auto";
-
-        this.style.height =
-            Math.min(
-                this.scrollHeight,
-                120
-            ) + "px";
-
-    }
-);
-
-
-function resetTextarea() {
-
-    messageInput.style.height =
-        "auto";
-}
-
-
-/* ================================= */
-/* SUGESTÕES */
-/* ================================= */
-
-document.addEventListener(
-    "click",
-    function(event) {
-
-        const suggestion =
-            event.target.closest(
-                ".suggestion"
-            );
-
-
-        if (!suggestion) return;
-
-
-        const question =
-            suggestion.dataset.question;
-
-
-        messageInput.value =
-            question;
-
-
-        messageInput.focus();
-
-
-        messageInput.dispatchEvent(
-            new Event("input")
-        );
-
-    }
-);
-
-
-/* ================================= */
-/* NOVA CONVERSA */
-/* ================================= */
-
-if (newChatButton) {
-
-    newChatButton.addEventListener(
-        "click",
-        function() {
-
-            chatContent.innerHTML = `
                 <div
                     class="welcome"
                     id="welcome"
@@ -753,278 +270,180 @@ if (newChatButton) {
 
                     </div>
 
+
                     <h2>
                         Olá! Eu sou a CCSIA.
                     </h2>
 
+
                     <p>
                         A Inteligência Artificial da
-                        <strong>Caixinha do Saber</strong>.
+                        <strong>
+                            Caixinha do Saber
+                        </strong>.
                     </p>
 
+
                     <span class="welcome-description">
+
                         Faça uma pergunta e comece a aprender.
+
                     </span>
 
+
+                    <!-- SUGESTÕES -->
+
                     <div class="suggestions">
+
 
                         <button
                             class="suggestion"
                             data-question="Explique a matemática de uma forma simples."
                         >
-                            <span>📐</span>
+
+                            <span>
+                                📐
+                            </span>
 
                             <div>
-                                <strong>Matemática</strong>
+
+                                <strong>
+                                    Matemática
+                                </strong>
+
                                 <small>
                                     Aprenda um conceito
                                 </small>
+
                             </div>
+
                         </button>
+
 
                         <button
                             class="suggestion"
                             data-question="Explique o que foi a Revolução Industrial."
                         >
-                            <span>🌎</span>
+
+                            <span>
+                                🌎
+                            </span>
 
                             <div>
-                                <strong>História</strong>
+
+                                <strong>
+                                    História
+                                </strong>
+
                                 <small>
                                     Conheça acontecimentos
                                 </small>
+
                             </div>
+
                         </button>
+
 
                         <button
                             class="suggestion"
                             data-question="Explique como funciona a programação para iniciantes."
                         >
-                            <span>💻</span>
+
+                            <span>
+                                💻
+                            </span>
 
                             <div>
-                                <strong>Tecnologia</strong>
+
+                                <strong>
+                                    Tecnologia
+                                </strong>
+
                                 <small>
                                     Descubra como funciona
                                 </small>
+
                             </div>
+
                         </button>
+
 
                         <button
                             class="suggestion"
                             data-question="Explique o que é inteligência artificial."
                         >
-                            <span>🤖</span>
+
+                            <span>
+                                🤖
+                            </span>
 
                             <div>
-                                <strong>IA</strong>
+
+                                <strong>
+                                    Inteligência Artificial
+                                </strong>
+
                                 <small>
                                     Entenda a tecnologia
                                 </small>
+
                             </div>
+
                         </button>
+
 
                     </div>
 
                 </div>
-            `;
 
+            </section>
 
-            messageInput.value = "";
 
-            resetTextarea();
+            <!-- ================================= -->
+            <!-- CAMPO DE MENSAGEM -->
+            <!-- ================================= -->
 
-            closeMobileMenu();
+            <div class="input-area">
 
-            messageInput.focus();
+                <div class="input-container">
 
-        }
-    );
 
-}
+                    <textarea
+                        id="messageInput"
+                        placeholder="Digite sua pergunta para a CCSIA..."
+                        rows="1"
+                    ></textarea>
 
 
-/* ================================= */
-/* MODO ESCURO */
-/* ================================= */
+                    <button
+                        id="sendButton"
+                        class="send-button"
+                        aria-label="Enviar pergunta"
+                    >
+                        ➤
+                    </button>
 
-if (themeButton) {
 
-    function updateThemeButton() {
+                </div>
 
-        const darkMode =
-            document.body.classList
-                .contains("dark-mode");
 
+                <p class="disclaimer">
 
-        if (darkMode) {
+                    A CCSIA pode cometer erros.
+                    Sempre verifique informações importantes.
 
-            themeButton.textContent =
-                "☀️";
+                </p>
 
-            themeButton.title =
-                "Modo claro";
+            </div>
 
-            themeButton.setAttribute(
-                "aria-label",
-                "Ativar modo claro"
-            );
 
-        } else {
+        </main>
 
-            themeButton.textContent =
-                "🌙";
+    </div>
 
-            themeButton.title =
-                "Modo escuro";
 
-            themeButton.setAttribute(
-                "aria-label",
-                "Ativar modo escuro"
-            );
+    <script src="script.js"></script>
 
-        }
+</body>
 
-    }
-
-
-    themeButton.addEventListener(
-        "click",
-        function() {
-
-            document.body.classList.toggle(
-                "dark-mode"
-            );
-
-
-            const darkMode =
-                document.body.classList
-                    .contains("dark-mode");
-
-
-            localStorage.setItem(
-                "ccsia-theme",
-                darkMode
-                    ? "dark"
-                    : "light"
-            );
-
-
-            updateThemeButton();
-
-        }
-    );
-
-
-    const savedTheme =
-        localStorage.getItem(
-            "ccsia-theme"
-        );
-
-
-    if (
-        savedTheme === "dark"
-    ) {
-
-        document.body.classList.add(
-            "dark-mode"
-        );
-
-    }
-
-
-    updateThemeButton();
-
-}
-
-
-/* ================================= */
-/* MENU MOBILE */
-/* ================================= */
-
-function openMobileMenu() {
-
-    if (!sidebar) return;
-
-    sidebar.classList.add(
-        "mobile-open"
-    );
-
-    menuOverlay.classList.add(
-        "active"
-    );
-
-    document.body.style.overflow =
-        "hidden";
-}
-
-
-function closeMobileMenu() {
-
-    if (!sidebar) return;
-
-    sidebar.classList.remove(
-        "mobile-open"
-    );
-
-    menuOverlay.classList.remove(
-        "active"
-    );
-
-    document.body.style.overflow =
-        "hidden";
-}
-
-
-if (menuButton) {
-
-    menuButton.addEventListener(
-        "click",
-        openMobileMenu
-    );
-
-}
-
-
-if (closeMenuButton) {
-
-    closeMenuButton.addEventListener(
-        "click",
-        closeMobileMenu
-    );
-
-}
-
-
-if (menuOverlay) {
-
-    menuOverlay.addEventListener(
-        "click",
-        closeMobileMenu
-    );
-
-}
-
-
-/* ================================= */
-/* CTRL + SHIFT + D */
-/* ================================= */
-
-document.addEventListener(
-    "keydown",
-    function(event) {
-
-        if (
-            event.ctrlKey &&
-            event.shiftKey &&
-            event.key.toLowerCase() === "d"
-        ) {
-
-            if (!themeButton) return;
-
-            themeButton.click();
-
-        }
-
-    }
-);
+</html>
