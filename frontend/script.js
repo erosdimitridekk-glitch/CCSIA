@@ -11,13 +11,11 @@ const welcome = document.getElementById("welcome");
 
 function formatAIResponse(text) {
 
-    // Protege o texto contra HTML
     let formatted = text
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
 
-    // Títulos
     formatted = formatted.replace(
         /^### (.+)$/gm,
         "<h3>$1</h3>"
@@ -33,31 +31,26 @@ function formatAIResponse(text) {
         "<h1>$1</h1>"
     );
 
-    // Negrito
     formatted = formatted.replace(
         /\*\*(.+?)\*\*/g,
         "<strong>$1</strong>"
     );
 
-    // Itálico
     formatted = formatted.replace(
         /(?<!\*)\*([^*\n]+)\*(?!\*)/g,
         "<em>$1</em>"
     );
 
-    // Código
     formatted = formatted.replace(
         /`([^`]+)`/g,
         "<code>$1</code>"
     );
 
-    // Listas com "-"
     formatted = formatted.replace(
         /^[•\-] (.+)$/gm,
         "<li>$1</li>"
     );
 
-    // Junta listas consecutivas
     formatted = formatted.replace(
         /(<li>.*<\/li>\n?)+/g,
         function(match) {
@@ -65,25 +58,21 @@ function formatAIResponse(text) {
         }
     );
 
-    // Quebras de linha
     formatted = formatted.replace(
         /\n/g,
         "<br>"
     );
 
-    // Remove <br> imediatamente depois de títulos
     formatted = formatted.replace(
         /(<\/h[1-3]>)<br>/g,
         "$1"
     );
 
-    // Remove <br> antes de listas
     formatted = formatted.replace(
         /<br><ul>/g,
         "<ul>"
     );
 
-    // Remove <br> depois de listas
     formatted = formatted.replace(
         /<\/ul><br>/g,
         "</ul>"
@@ -94,7 +83,7 @@ function formatAIResponse(text) {
 
 
 // ==========================================
-// CRIA O AVATAR DA MENSAGEM
+// CRIA AVATAR
 // ==========================================
 
 function createAvatar(type) {
@@ -108,7 +97,6 @@ function createAvatar(type) {
             : "user-avatar"
     );
 
-    // Avatar da CCSIA
     if (type === "ai") {
 
         const logo = document.createElement("img");
@@ -120,7 +108,6 @@ function createAvatar(type) {
 
     } else {
 
-        // Avatar do usuário
         avatar.textContent = "👤";
     }
 
@@ -129,7 +116,7 @@ function createAvatar(type) {
 
 
 // ==========================================
-// ENVIAR MENSAGEM
+// ENVIA MENSAGEM
 // ==========================================
 
 async function sendMessage() {
@@ -183,7 +170,14 @@ async function sendMessage() {
             return;
         }
 
-        addMessage(data.answer, "ai");
+        // ==========================================
+        // NOVO: RESPOSTA COM EFEITO DE DIGITAÇÃO
+        // ==========================================
+
+        await addTypingMessage(
+            data.answer,
+            "ai"
+        );
 
     } catch (error) {
 
@@ -191,7 +185,7 @@ async function sendMessage() {
 
         loadingMessage.remove();
 
-        addMessage(
+        await addTypingMessage(
             "Não consegui conectar ao servidor da CCSIA. Verifique se o servidor está funcionando.",
             "ai"
         );
@@ -204,7 +198,7 @@ async function sendMessage() {
 
 
 // ==========================================
-// ADICIONA UMA MENSAGEM
+// ADICIONA MENSAGEM NORMAL
 // ==========================================
 
 function addMessage(text, type) {
@@ -216,17 +210,13 @@ function addMessage(text, type) {
         type
     );
 
-
-    // Cria o avatar
     const avatar = createAvatar(type);
-
 
     const content = document.createElement("div");
 
     content.classList.add(
         "message-content"
     );
-
 
     const name = document.createElement("div");
 
@@ -239,15 +229,12 @@ function addMessage(text, type) {
             ? "CCSIA"
             : "Você";
 
-
     const textElement = document.createElement("div");
 
     textElement.classList.add(
         "message-text"
     );
 
-
-    // Resposta da IA
     if (type === "ai") {
 
         textElement.innerHTML =
@@ -255,11 +242,61 @@ function addMessage(text, type) {
 
     } else {
 
-        // Mensagem do usuário
         textElement.textContent =
             text;
     }
 
+    content.appendChild(name);
+
+    content.appendChild(textElement);
+
+    message.appendChild(avatar);
+
+    message.appendChild(content);
+
+    chatContent.appendChild(message);
+
+    chatContent.scrollTop =
+        chatContent.scrollHeight;
+
+    return message;
+}
+
+
+// ==========================================
+// NOVO: DIGITAÇÃO DA CCSIA
+// ==========================================
+
+async function addTypingMessage(text, type) {
+
+    const message = document.createElement("div");
+
+    message.classList.add(
+        "message",
+        type
+    );
+
+    const avatar = createAvatar(type);
+
+    const content = document.createElement("div");
+
+    content.classList.add(
+        "message-content"
+    );
+
+    const name = document.createElement("div");
+
+    name.classList.add(
+        "message-name"
+    );
+
+    name.textContent = "CCSIA";
+
+    const textElement = document.createElement("div");
+
+    textElement.classList.add(
+        "message-text"
+    );
 
     content.appendChild(name);
 
@@ -272,9 +309,28 @@ function addMessage(text, type) {
     chatContent.appendChild(message);
 
 
-    chatContent.scrollTop =
-        chatContent.scrollHeight;
+    // ==========================================
+    // DIGITAÇÃO
+    // ==========================================
 
+    let currentText = "";
+
+    const speed = 12;
+
+    for (let i = 0; i < text.length; i++) {
+
+        currentText += text[i];
+
+        textElement.innerHTML =
+            formatAIResponse(currentText);
+
+        chatContent.scrollTop =
+            chatContent.scrollHeight;
+
+        await new Promise(
+            resolve => setTimeout(resolve, speed)
+        );
+    }
 
     return message;
 }
@@ -293,17 +349,13 @@ function addLoadingMessage() {
         "ai"
     );
 
-
-    // Avatar com a logo da CCSIA
     const avatar = createAvatar("ai");
-
 
     const content = document.createElement("div");
 
     content.classList.add(
         "message-content"
     );
-
 
     const name = document.createElement("div");
 
@@ -313,21 +365,17 @@ function addLoadingMessage() {
 
     name.textContent = "CCSIA";
 
-
     const text = document.createElement("div");
 
     text.classList.add(
         "message-text"
     );
 
-
-    // Animação de carregamento
     const typing = document.createElement("div");
 
     typing.classList.add(
         "typing"
     );
-
 
     for (let i = 0; i < 3; i++) {
 
@@ -336,7 +384,6 @@ function addLoadingMessage() {
 
         typing.appendChild(dot);
     }
-
 
     text.appendChild(typing);
 
@@ -350,17 +397,15 @@ function addLoadingMessage() {
 
     chatContent.appendChild(message);
 
-
     chatContent.scrollTop =
         chatContent.scrollHeight;
-
 
     return message;
 }
 
 
 // ==========================================
-// ENTER ENVIA A MENSAGEM
+// ENTER ENVIA
 // ==========================================
 
 messageInput.addEventListener(
@@ -391,7 +436,7 @@ sendButton.addEventListener(
 
 
 // ==========================================
-// AJUSTA ALTURA DO CAMPO
+// AJUSTA ALTURA
 // ==========================================
 
 messageInput.addEventListener(
