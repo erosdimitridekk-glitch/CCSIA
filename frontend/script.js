@@ -1,13 +1,40 @@
-const chatContent = document.getElementById("chatContent");
-const messageInput = document.getElementById("messageInput");
-const sendButton = document.getElementById("sendButton");
-const newChatButton = document.getElementById("newChatButton");
-const welcome = document.getElementById("welcome");
+const chatContent =
+    document.getElementById("chatContent");
+
+const messageInput =
+    document.getElementById("messageInput");
+
+const sendButton =
+    document.getElementById("sendButton");
+
+const newChatButton =
+    document.getElementById("newChatButton");
+
+const welcome =
+    document.getElementById("welcome");
+
+const themeButton =
+    document.getElementById("themeButton");
+
+const menuButton =
+    document.getElementById("menuButton");
+
+const closeMenuButton =
+    document.getElementById("closeMenuButton");
+
+const menuOverlay =
+    document.getElementById("menuOverlay");
+
+const sidebar =
+    document.getElementById("sidebar");
+
+const historyList =
+    document.getElementById("historyList");
 
 
-// ==========================================
-// CONVERTE A RESPOSTA DA IA EM HTML
-// ==========================================
+/* ================================= */
+/* FORMATAÇÃO DA RESPOSTA */
+/* ================================= */
 
 function formatAIResponse(text) {
 
@@ -16,89 +43,89 @@ function formatAIResponse(text) {
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
 
-    // Títulos
-    formatted = formatted.replace(
-        /^### (.+)$/gm,
-        "<h3>$1</h3>"
-    );
+    formatted =
+        formatted.replace(
+            /^### (.+)$/gm,
+            "<h3>$1</h3>"
+        );
 
-    formatted = formatted.replace(
-        /^## (.+)$/gm,
-        "<h2>$1</h2>"
-    );
+    formatted =
+        formatted.replace(
+            /^## (.+)$/gm,
+            "<h2>$1</h2>"
+        );
 
-    formatted = formatted.replace(
-        /^# (.+)$/gm,
-        "<h1>$1</h1>"
-    );
+    formatted =
+        formatted.replace(
+            /^# (.+)$/gm,
+            "<h1>$1</h1>"
+        );
 
-    // Negrito
-    formatted = formatted.replace(
-        /\*\*(.+?)\*\*/g,
-        "<strong>$1</strong>"
-    );
+    formatted =
+        formatted.replace(
+            /\*\*(.+?)\*\*/g,
+            "<strong>$1</strong>"
+        );
 
-    // Itálico
-    formatted = formatted.replace(
-        /(?<!\*)\*([^*\n]+)\*(?!\*)/g,
-        "<em>$1</em>"
-    );
+    formatted =
+        formatted.replace(
+            /(?<!\*)\*([^*\n]+)\*(?!\*)/g,
+            "<em>$1</em>"
+        );
 
-    // Código
-    formatted = formatted.replace(
-        /`([^`]+)`/g,
-        "<code>$1</code>"
-    );
+    formatted =
+        formatted.replace(
+            /`([^`]+)`/g,
+            "<code>$1</code>"
+        );
 
-    // Listas
-    formatted = formatted.replace(
-        /^[•\-] (.+)$/gm,
-        "<li>$1</li>"
-    );
+    formatted =
+        formatted.replace(
+            /^[•\-] (.+)$/gm,
+            "<li>$1</li>"
+        );
 
-    // Junta listas consecutivas
-    formatted = formatted.replace(
-        /(<li>.*<\/li>\n?)+/g,
-        function(match) {
-            return "<ul>" + match + "</ul>";
-        }
-    );
+    formatted =
+        formatted.replace(
+            /(<li>.*<\/li>\n?)+/g,
+            function(match) {
+                return "<ul>" + match + "</ul>";
+            }
+        );
 
-    // Quebras de linha
-    formatted = formatted.replace(
-        /\n/g,
-        "<br>"
-    );
+    formatted =
+        formatted.replace(/\n/g, "<br>");
 
-    // Remove quebra depois de títulos
-    formatted = formatted.replace(
-        /(<\/h[1-3]>)<br>/g,
-        "$1"
-    );
+    formatted =
+        formatted.replace(
+            /(<\/h[1-3]>)<br>/g,
+            "$1"
+        );
 
-    // Remove quebra antes de listas
-    formatted = formatted.replace(
-        /<br><ul>/g,
-        "<ul>"
-    );
+    formatted =
+        formatted.replace(
+            /<br><ul>/g,
+            "<ul>"
+        );
 
-    // Remove quebra depois de listas
-    formatted = formatted.replace(
-        /<\/ul><br>/g,
-        "</ul>"
-    );
+    formatted =
+        formatted.replace(
+            /<\/ul><br>/g,
+            "</ul>"
+        );
 
     return formatted;
 }
 
 
-// ==========================================
-// CRIA AVATAR
-// ==========================================
+/* ================================= */
+/* AVATAR */
+/* ================================= */
 
 function createAvatar(type) {
 
-    const avatar = document.createElement("div");
+    const avatar =
+        document.createElement("div");
 
     avatar.classList.add(
         "message-avatar",
@@ -107,39 +134,45 @@ function createAvatar(type) {
             : "user-avatar"
     );
 
-    // Avatar da CCSIA
     if (type === "ai") {
 
-        const logo = document.createElement("img");
+        const logo =
+            document.createElement("img");
 
         logo.src = "logo.png";
-        logo.alt = "Logo da CCSIA";
+
+        logo.alt =
+            "Logo da CCSIA";
 
         avatar.appendChild(logo);
 
     } else {
 
-        // Avatar do usuário
         avatar.textContent = "👤";
+
     }
 
     return avatar;
 }
 
 
-// ==========================================
-// BOTÃO COPIAR
-// ==========================================
+/* ================================= */
+/* BOTÃO COPIAR */
+/* ================================= */
 
 function createCopyButton(text) {
 
-    const copyButton = document.createElement("button");
+    const copyButton =
+        document.createElement("button");
 
-    copyButton.classList.add("copy-button");
+    copyButton.classList.add(
+        "copy-button"
+    );
 
     copyButton.type = "button";
 
-    copyButton.innerHTML = "📋 Copiar";
+    copyButton.innerHTML =
+        "📋 Copiar";
 
 
     copyButton.addEventListener(
@@ -148,11 +181,15 @@ function createCopyButton(text) {
 
             try {
 
-                await navigator.clipboard.writeText(text);
+                await navigator.clipboard
+                    .writeText(text);
 
-                copyButton.innerHTML = "✓ Copiado!";
+                copyButton.innerHTML =
+                    "✓ Copiado!";
 
-                copyButton.classList.add("copied");
+                copyButton.classList.add(
+                    "copied"
+                );
 
 
                 setTimeout(
@@ -168,7 +205,6 @@ function createCopyButton(text) {
                     },
                     2000
                 );
-
 
             } catch (error) {
 
@@ -190,7 +226,9 @@ function createCopyButton(text) {
                     },
                     2000
                 );
+
             }
+
         }
     );
 
@@ -198,25 +236,24 @@ function createCopyButton(text) {
 }
 
 
-// ==========================================
-// ENVIA MENSAGEM
-// ==========================================
+/* ================================= */
+/* ENVIAR MENSAGEM */
+/* ================================= */
 
 async function sendMessage() {
 
     const message =
         messageInput.value.trim();
 
+
     if (!message) return;
 
 
-    // Remove tela inicial
     if (welcome) {
         welcome.remove();
     }
 
 
-    // Mostra mensagem do usuário
     addMessage(
         message,
         "user"
@@ -230,7 +267,6 @@ async function sendMessage() {
     sendButton.disabled = true;
 
 
-    // Mostra carregamento
     const loadingMessage =
         addLoadingMessage();
 
@@ -248,9 +284,10 @@ async function sendMessage() {
                             "application/json"
                     },
 
-                    body: JSON.stringify({
-                        message: message
-                    })
+                    body:
+                        JSON.stringify({
+                            message: message
+                        })
                 }
             );
 
@@ -275,7 +312,6 @@ async function sendMessage() {
         }
 
 
-        // Resposta com animação
         await addTypingMessage(
             data.answer,
             "ai"
@@ -289,7 +325,6 @@ async function sendMessage() {
             error
         );
 
-
         loadingMessage.remove();
 
 
@@ -302,22 +337,19 @@ async function sendMessage() {
     } finally {
 
         sendButton.disabled = false;
+
     }
 }
 
 
-// ==========================================
-// ADICIONA MENSAGEM NORMAL
-// ==========================================
+/* ================================= */
+/* ADICIONAR MENSAGEM */
+/* ================================= */
 
-function addMessage(
-    text,
-    type
-) {
+function addMessage(text, type) {
 
     const message =
         document.createElement("div");
-
 
     message.classList.add(
         "message",
@@ -325,30 +357,24 @@ function addMessage(
     );
 
 
-    // Avatar
     const avatar =
         createAvatar(type);
 
 
-    // Conteúdo
     const content =
         document.createElement("div");
-
 
     content.classList.add(
         "message-content"
     );
 
 
-    // Nome
     const name =
         document.createElement("div");
-
 
     name.classList.add(
         "message-name"
     );
-
 
     name.textContent =
         type === "ai"
@@ -356,10 +382,8 @@ function addMessage(
             : "Você";
 
 
-    // Texto
     const textElement =
         document.createElement("div");
-
 
     textElement.classList.add(
         "message-text"
@@ -375,18 +399,15 @@ function addMessage(
 
         textElement.textContent =
             text;
+
     }
 
 
-    // Adiciona elementos
     content.appendChild(name);
 
-    content.appendChild(
-        textElement
-    );
+    content.appendChild(textElement);
 
 
-    // Botão copiar somente para IA
     if (type === "ai") {
 
         const copyButton =
@@ -395,24 +416,17 @@ function addMessage(
         content.appendChild(
             copyButton
         );
+
     }
 
 
-    message.appendChild(
-        avatar
-    );
+    message.appendChild(avatar);
 
-    message.appendChild(
-        content
-    );
+    message.appendChild(content);
+
+    chatContent.appendChild(message);
 
 
-    chatContent.appendChild(
-        message
-    );
-
-
-    // Rola para o final
     chatContent.scrollTop =
         chatContent.scrollHeight;
 
@@ -421,9 +435,9 @@ function addMessage(
 }
 
 
-// ==========================================
-// RESPOSTA COM ANIMAÇÃO DE DIGITAÇÃO
-// ==========================================
+/* ================================= */
+/* EFEITO DIGITANDO */
+/* ================================= */
 
 async function addTypingMessage(
     text,
@@ -433,78 +447,56 @@ async function addTypingMessage(
     const message =
         document.createElement("div");
 
-
     message.classList.add(
         "message",
         type
     );
 
 
-    // Avatar
     const avatar =
         createAvatar(type);
 
 
-    // Conteúdo
     const content =
         document.createElement("div");
-
 
     content.classList.add(
         "message-content"
     );
 
 
-    // Nome
     const name =
         document.createElement("div");
-
 
     name.classList.add(
         "message-name"
     );
 
-
     name.textContent =
         "CCSIA";
 
 
-    // Texto
     const textElement =
         document.createElement("div");
-
 
     textElement.classList.add(
         "message-text"
     );
 
 
-    content.appendChild(
-        name
-    );
+    content.appendChild(name);
 
     content.appendChild(
         textElement
     );
 
 
-    message.appendChild(
-        avatar
-    );
+    message.appendChild(avatar);
 
-    message.appendChild(
-        content
-    );
+    message.appendChild(content);
 
+    chatContent.appendChild(message);
 
-    chatContent.appendChild(
-        message
-    );
-
-
-    // ==========================================
-    // EFEITO DE DIGITAÇÃO
-    // ==========================================
 
     let currentText = "";
 
@@ -517,8 +509,7 @@ async function addTypingMessage(
         i++
     ) {
 
-        currentText +=
-            text[i];
+        currentText += text[i];
 
 
         textElement.innerHTML =
@@ -538,12 +529,9 @@ async function addTypingMessage(
                     speed
                 )
         );
+
     }
 
-
-    // ==========================================
-    // BOTÃO COPIAR
-    // ==========================================
 
     const copyButton =
         createCopyButton(text);
@@ -562,15 +550,14 @@ async function addTypingMessage(
 }
 
 
-// ==========================================
-// MENSAGEM DE CARREGAMENTO
-// ==========================================
+/* ================================= */
+/* LOADING */
+/* ================================= */
 
 function addLoadingMessage() {
 
     const message =
         document.createElement("div");
-
 
     message.classList.add(
         "message",
@@ -578,14 +565,12 @@ function addLoadingMessage() {
     );
 
 
-    // Logo CCSIA
     const avatar =
         createAvatar("ai");
 
 
     const content =
         document.createElement("div");
-
 
     content.classList.add(
         "message-content"
@@ -595,11 +580,9 @@ function addLoadingMessage() {
     const name =
         document.createElement("div");
 
-
     name.classList.add(
         "message-name"
     );
-
 
     name.textContent =
         "CCSIA";
@@ -608,16 +591,13 @@ function addLoadingMessage() {
     const text =
         document.createElement("div");
 
-
     text.classList.add(
         "message-text"
     );
 
 
-    // Pontinhos de carregamento
     const typing =
         document.createElement("div");
-
 
     typing.classList.add(
         "typing"
@@ -633,39 +613,22 @@ function addLoadingMessage() {
         const dot =
             document.createElement("span");
 
+        typing.appendChild(dot);
 
-        typing.appendChild(
-            dot
-        );
     }
 
 
-    text.appendChild(
-        typing
-    );
+    text.appendChild(typing);
 
+    content.appendChild(name);
 
-    content.appendChild(
-        name
-    );
+    content.appendChild(text);
 
-    content.appendChild(
-        text
-    );
+    message.appendChild(avatar);
 
+    message.appendChild(content);
 
-    message.appendChild(
-        avatar
-    );
-
-    message.appendChild(
-        content
-    );
-
-
-    chatContent.appendChild(
-        message
-    );
+    chatContent.appendChild(message);
 
 
     chatContent.scrollTop =
@@ -676,9 +639,9 @@ function addLoadingMessage() {
 }
 
 
-// ==========================================
-// ENTER ENVIA A MENSAGEM
-// ==========================================
+/* ================================= */
+/* TEXTAREA */
+/* ================================= */
 
 messageInput.addEventListener(
     "keydown",
@@ -692,24 +655,18 @@ messageInput.addEventListener(
             event.preventDefault();
 
             sendMessage();
+
         }
+
     }
 );
 
-
-// ==========================================
-// BOTÃO ENVIAR
-// ==========================================
 
 sendButton.addEventListener(
     "click",
     sendMessage
 );
 
-
-// ==========================================
-// AJUSTA ALTURA DO CAMPO
-// ==========================================
 
 messageInput.addEventListener(
     "input",
@@ -718,19 +675,15 @@ messageInput.addEventListener(
         this.style.height =
             "auto";
 
-
         this.style.height =
             Math.min(
                 this.scrollHeight,
                 120
             ) + "px";
+
     }
 );
 
-
-// ==========================================
-// RESET TEXTAREA
-// ==========================================
 
 function resetTextarea() {
 
@@ -739,9 +692,9 @@ function resetTextarea() {
 }
 
 
-// ==========================================
-// SUGESTÕES
-// ==========================================
+/* ================================= */
+/* SUGESTÕES */
+/* ================================= */
 
 document.addEventListener(
     "click",
@@ -770,13 +723,14 @@ document.addEventListener(
         messageInput.dispatchEvent(
             new Event("input")
         );
+
     }
 );
 
 
-// ==========================================
-// NOVA CONVERSA
-// ==========================================
+/* ================================= */
+/* NOVA CONVERSA */
+/* ================================= */
 
 if (newChatButton) {
 
@@ -784,35 +738,123 @@ if (newChatButton) {
         "click",
         function() {
 
-            location.reload();
+            chatContent.innerHTML = `
+                <div
+                    class="welcome"
+                    id="welcome"
+                >
+
+                    <div class="welcome-icon">
+
+                        <img
+                            src="logo.png"
+                            alt="Logo da CCSIA"
+                        >
+
+                    </div>
+
+                    <h2>
+                        Olá! Eu sou a CCSIA.
+                    </h2>
+
+                    <p>
+                        A Inteligência Artificial da
+                        <strong>Caixinha do Saber</strong>.
+                    </p>
+
+                    <span class="welcome-description">
+                        Faça uma pergunta e comece a aprender.
+                    </span>
+
+                    <div class="suggestions">
+
+                        <button
+                            class="suggestion"
+                            data-question="Explique a matemática de uma forma simples."
+                        >
+                            <span>📐</span>
+
+                            <div>
+                                <strong>Matemática</strong>
+                                <small>
+                                    Aprenda um conceito
+                                </small>
+                            </div>
+                        </button>
+
+                        <button
+                            class="suggestion"
+                            data-question="Explique o que foi a Revolução Industrial."
+                        >
+                            <span>🌎</span>
+
+                            <div>
+                                <strong>História</strong>
+                                <small>
+                                    Conheça acontecimentos
+                                </small>
+                            </div>
+                        </button>
+
+                        <button
+                            class="suggestion"
+                            data-question="Explique como funciona a programação para iniciantes."
+                        >
+                            <span>💻</span>
+
+                            <div>
+                                <strong>Tecnologia</strong>
+                                <small>
+                                    Descubra como funciona
+                                </small>
+                            </div>
+                        </button>
+
+                        <button
+                            class="suggestion"
+                            data-question="Explique o que é inteligência artificial."
+                        >
+                            <span>🤖</span>
+
+                            <div>
+                                <strong>IA</strong>
+                                <small>
+                                    Entenda a tecnologia
+                                </small>
+                            </div>
+                        </button>
+
+                    </div>
+
+                </div>
+            `;
+
+
+            messageInput.value = "";
+
+            resetTextarea();
+
+            closeMobileMenu();
+
+            messageInput.focus();
 
         }
     );
+
 }
 
 
-// ==========================================
-// MODO ESCURO / MODO CLARO
-// ==========================================
-
-const themeButton =
-    document.getElementById(
-        "themeButton"
-    );
-
+/* ================================= */
+/* MODO ESCURO */
+/* ================================= */
 
 if (themeButton) {
-
-    // ------------------------------------------
-    // FUNÇÃO PARA ATUALIZAR O BOTÃO
-    // ------------------------------------------
 
     function updateThemeButton() {
 
         const darkMode =
-            document.body.classList.contains(
-                "dark-mode"
-            );
+            document.body.classList
+                .contains("dark-mode");
 
 
         if (darkMode) {
@@ -840,13 +882,11 @@ if (themeButton) {
                 "aria-label",
                 "Ativar modo escuro"
             );
+
         }
+
     }
 
-
-    // ------------------------------------------
-    // CLIQUE NO BOTÃO
-    // ------------------------------------------
 
     themeButton.addEventListener(
         "click",
@@ -858,12 +898,10 @@ if (themeButton) {
 
 
             const darkMode =
-                document.body.classList.contains(
-                    "dark-mode"
-                );
+                document.body.classList
+                    .contains("dark-mode");
 
 
-            // Salva preferência
             localStorage.setItem(
                 "ccsia-theme",
                 darkMode
@@ -873,13 +911,10 @@ if (themeButton) {
 
 
             updateThemeButton();
+
         }
     );
 
-
-    // ------------------------------------------
-    // RECUPERA TEMA SALVO
-    // ------------------------------------------
 
     const savedTheme =
         localStorage.getItem(
@@ -887,22 +922,93 @@ if (themeButton) {
         );
 
 
-    if (savedTheme === "dark") {
+    if (
+        savedTheme === "dark"
+    ) {
 
         document.body.classList.add(
             "dark-mode"
         );
+
     }
 
 
-    // Atualiza botão
     updateThemeButton();
+
 }
 
 
-// ==========================================
-// ATALHO CTRL + SHIFT + D
-// ==========================================
+/* ================================= */
+/* MENU MOBILE */
+/* ================================= */
+
+function openMobileMenu() {
+
+    if (!sidebar) return;
+
+    sidebar.classList.add(
+        "mobile-open"
+    );
+
+    menuOverlay.classList.add(
+        "active"
+    );
+
+    document.body.style.overflow =
+        "hidden";
+}
+
+
+function closeMobileMenu() {
+
+    if (!sidebar) return;
+
+    sidebar.classList.remove(
+        "mobile-open"
+    );
+
+    menuOverlay.classList.remove(
+        "active"
+    );
+
+    document.body.style.overflow =
+        "hidden";
+}
+
+
+if (menuButton) {
+
+    menuButton.addEventListener(
+        "click",
+        openMobileMenu
+    );
+
+}
+
+
+if (closeMenuButton) {
+
+    closeMenuButton.addEventListener(
+        "click",
+        closeMobileMenu
+    );
+
+}
+
+
+if (menuOverlay) {
+
+    menuOverlay.addEventListener(
+        "click",
+        closeMobileMenu
+    );
+
+}
+
+
+/* ================================= */
+/* CTRL + SHIFT + D */
+/* ================================= */
 
 document.addEventListener(
     "keydown",
@@ -916,8 +1022,9 @@ document.addEventListener(
 
             if (!themeButton) return;
 
-
             themeButton.click();
+
         }
+
     }
 );
