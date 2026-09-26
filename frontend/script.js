@@ -107,7 +107,7 @@ function createAvatar(type) {
             : "user-avatar"
     );
 
-    // Logo da CCSIA
+    // Avatar da CCSIA
     if (type === "ai") {
 
         const logo = document.createElement("img");
@@ -128,7 +128,7 @@ function createAvatar(type) {
 
 
 // ==========================================
-// CRIA BOTÃO DE COPIAR
+// BOTÃO COPIAR
 // ==========================================
 
 function createCopyButton(text) {
@@ -169,6 +169,7 @@ function createCopyButton(text) {
                     2000
                 );
 
+
             } catch (error) {
 
                 console.error(
@@ -178,6 +179,7 @@ function createCopyButton(text) {
 
                 copyButton.innerHTML =
                     "❌ Erro";
+
 
                 setTimeout(
                     function() {
@@ -202,7 +204,8 @@ function createCopyButton(text) {
 
 async function sendMessage() {
 
-    const message = messageInput.value.trim();
+    const message =
+        messageInput.value.trim();
 
     if (!message) return;
 
@@ -775,11 +778,146 @@ document.addEventListener(
 // NOVA CONVERSA
 // ==========================================
 
-newChatButton.addEventListener(
-    "click",
-    function() {
+if (newChatButton) {
 
-        location.reload();
+    newChatButton.addEventListener(
+        "click",
+        function() {
 
+            location.reload();
+
+        }
+    );
+}
+
+
+// ==========================================
+// MODO ESCURO / MODO CLARO
+// ==========================================
+
+const themeButton =
+    document.getElementById(
+        "themeButton"
+    );
+
+
+if (themeButton) {
+
+    // ------------------------------------------
+    // FUNÇÃO PARA ATUALIZAR O BOTÃO
+    // ------------------------------------------
+
+    function updateThemeButton() {
+
+        const darkMode =
+            document.body.classList.contains(
+                "dark-mode"
+            );
+
+
+        if (darkMode) {
+
+            themeButton.textContent =
+                "☀️";
+
+            themeButton.title =
+                "Modo claro";
+
+            themeButton.setAttribute(
+                "aria-label",
+                "Ativar modo claro"
+            );
+
+        } else {
+
+            themeButton.textContent =
+                "🌙";
+
+            themeButton.title =
+                "Modo escuro";
+
+            themeButton.setAttribute(
+                "aria-label",
+                "Ativar modo escuro"
+            );
+        }
+    }
+
+
+    // ------------------------------------------
+    // CLIQUE NO BOTÃO
+    // ------------------------------------------
+
+    themeButton.addEventListener(
+        "click",
+        function() {
+
+            document.body.classList.toggle(
+                "dark-mode"
+            );
+
+
+            const darkMode =
+                document.body.classList.contains(
+                    "dark-mode"
+                );
+
+
+            // Salva preferência
+            localStorage.setItem(
+                "ccsia-theme",
+                darkMode
+                    ? "dark"
+                    : "light"
+            );
+
+
+            updateThemeButton();
+        }
+    );
+
+
+    // ------------------------------------------
+    // RECUPERA TEMA SALVO
+    // ------------------------------------------
+
+    const savedTheme =
+        localStorage.getItem(
+            "ccsia-theme"
+        );
+
+
+    if (savedTheme === "dark") {
+
+        document.body.classList.add(
+            "dark-mode"
+        );
+    }
+
+
+    // Atualiza botão
+    updateThemeButton();
+}
+
+
+// ==========================================
+// ATALHO CTRL + SHIFT + D
+// ==========================================
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.ctrlKey &&
+            event.shiftKey &&
+            event.key.toLowerCase() === "d"
+        ) {
+
+            if (!themeButton) return;
+
+
+            themeButton.click();
+        }
     }
 );
