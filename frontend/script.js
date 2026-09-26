@@ -6,7 +6,7 @@ const welcome = document.getElementById("welcome");
 
 
 // ==========================================
-// CONVERTE A RESPOSTA DA IA EM HTML BONITO
+// CONVERTE A RESPOSTA DA IA EM HTML
 // ==========================================
 
 function formatAIResponse(text) {
@@ -16,6 +16,7 @@ function formatAIResponse(text) {
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
 
+    // Títulos
     formatted = formatted.replace(
         /^### (.+)$/gm,
         "<h3>$1</h3>"
@@ -31,26 +32,31 @@ function formatAIResponse(text) {
         "<h1>$1</h1>"
     );
 
+    // Negrito
     formatted = formatted.replace(
         /\*\*(.+?)\*\*/g,
         "<strong>$1</strong>"
     );
 
+    // Itálico
     formatted = formatted.replace(
         /(?<!\*)\*([^*\n]+)\*(?!\*)/g,
         "<em>$1</em>"
     );
 
+    // Código
     formatted = formatted.replace(
         /`([^`]+)`/g,
         "<code>$1</code>"
     );
 
+    // Listas
     formatted = formatted.replace(
         /^[•\-] (.+)$/gm,
         "<li>$1</li>"
     );
 
+    // Junta listas consecutivas
     formatted = formatted.replace(
         /(<li>.*<\/li>\n?)+/g,
         function(match) {
@@ -58,21 +64,25 @@ function formatAIResponse(text) {
         }
     );
 
+    // Quebras de linha
     formatted = formatted.replace(
         /\n/g,
         "<br>"
     );
 
+    // Remove quebra depois de títulos
     formatted = formatted.replace(
         /(<\/h[1-3]>)<br>/g,
         "$1"
     );
 
+    // Remove quebra antes de listas
     formatted = formatted.replace(
         /<br><ul>/g,
         "<ul>"
     );
 
+    // Remove quebra depois de listas
     formatted = formatted.replace(
         /<\/ul><br>/g,
         "</ul>"
@@ -97,6 +107,7 @@ function createAvatar(type) {
             : "user-avatar"
     );
 
+    // Logo da CCSIA
     if (type === "ai") {
 
         const logo = document.createElement("img");
@@ -108,10 +119,80 @@ function createAvatar(type) {
 
     } else {
 
+        // Avatar do usuário
         avatar.textContent = "👤";
     }
 
     return avatar;
+}
+
+
+// ==========================================
+// CRIA BOTÃO DE COPIAR
+// ==========================================
+
+function createCopyButton(text) {
+
+    const copyButton = document.createElement("button");
+
+    copyButton.classList.add("copy-button");
+
+    copyButton.type = "button";
+
+    copyButton.innerHTML = "📋 Copiar";
+
+
+    copyButton.addEventListener(
+        "click",
+        async function() {
+
+            try {
+
+                await navigator.clipboard.writeText(text);
+
+                copyButton.innerHTML = "✓ Copiado!";
+
+                copyButton.classList.add("copied");
+
+
+                setTimeout(
+                    function() {
+
+                        copyButton.innerHTML =
+                            "📋 Copiar";
+
+                        copyButton.classList.remove(
+                            "copied"
+                        );
+
+                    },
+                    2000
+                );
+
+            } catch (error) {
+
+                console.error(
+                    "Não foi possível copiar:",
+                    error
+                );
+
+                copyButton.innerHTML =
+                    "❌ Erro";
+
+                setTimeout(
+                    function() {
+
+                        copyButton.innerHTML =
+                            "📋 Copiar";
+
+                    },
+                    2000
+                );
+            }
+        }
+    );
+
+    return copyButton;
 }
 
 
@@ -125,11 +206,19 @@ async function sendMessage() {
 
     if (!message) return;
 
+
+    // Remove tela inicial
     if (welcome) {
         welcome.remove();
     }
 
-    addMessage(message, "user");
+
+    // Mostra mensagem do usuário
+    addMessage(
+        message,
+        "user"
+    );
+
 
     messageInput.value = "";
 
@@ -137,26 +226,38 @@ async function sendMessage() {
 
     sendButton.disabled = true;
 
-    const loadingMessage = addLoadingMessage();
+
+    // Mostra carregamento
+    const loadingMessage =
+        addLoadingMessage();
+
 
     try {
 
-        const response = await fetch("/api/chat", {
+        const response =
+            await fetch(
+                "/api/chat",
+                {
+                    method: "POST",
 
-            method: "POST",
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+                    body: JSON.stringify({
+                        message: message
+                    })
+                }
+            );
 
-            body: JSON.stringify({
-                message: message
-            })
-        });
 
-        const data = await response.json();
+        const data =
+            await response.json();
+
 
         loadingMessage.remove();
+
 
         if (!response.ok) {
 
@@ -170,25 +271,30 @@ async function sendMessage() {
             return;
         }
 
-        // ==========================================
-        // NOVO: RESPOSTA COM EFEITO DE DIGITAÇÃO
-        // ==========================================
 
+        // Resposta com animação
         await addTypingMessage(
             data.answer,
             "ai"
         );
 
+
     } catch (error) {
 
-        console.error("Erro:", error);
+        console.error(
+            "Erro:",
+            error
+        );
+
 
         loadingMessage.remove();
+
 
         await addTypingMessage(
             "Não consegui conectar ao servidor da CCSIA. Verifique se o servidor está funcionando.",
             "ai"
         );
+
 
     } finally {
 
@@ -201,39 +307,61 @@ async function sendMessage() {
 // ADICIONA MENSAGEM NORMAL
 // ==========================================
 
-function addMessage(text, type) {
+function addMessage(
+    text,
+    type
+) {
 
-    const message = document.createElement("div");
+    const message =
+        document.createElement("div");
+
 
     message.classList.add(
         "message",
         type
     );
 
-    const avatar = createAvatar(type);
 
-    const content = document.createElement("div");
+    // Avatar
+    const avatar =
+        createAvatar(type);
+
+
+    // Conteúdo
+    const content =
+        document.createElement("div");
+
 
     content.classList.add(
         "message-content"
     );
 
-    const name = document.createElement("div");
+
+    // Nome
+    const name =
+        document.createElement("div");
+
 
     name.classList.add(
         "message-name"
     );
+
 
     name.textContent =
         type === "ai"
             ? "CCSIA"
             : "Você";
 
-    const textElement = document.createElement("div");
+
+    // Texto
+    const textElement =
+        document.createElement("div");
+
 
     textElement.classList.add(
         "message-text"
     );
+
 
     if (type === "ai") {
 
@@ -246,91 +374,186 @@ function addMessage(text, type) {
             text;
     }
 
+
+    // Adiciona elementos
     content.appendChild(name);
 
-    content.appendChild(textElement);
+    content.appendChild(
+        textElement
+    );
 
-    message.appendChild(avatar);
 
-    message.appendChild(content);
+    // Botão copiar somente para IA
+    if (type === "ai") {
 
-    chatContent.appendChild(message);
+        const copyButton =
+            createCopyButton(text);
 
+        content.appendChild(
+            copyButton
+        );
+    }
+
+
+    message.appendChild(
+        avatar
+    );
+
+    message.appendChild(
+        content
+    );
+
+
+    chatContent.appendChild(
+        message
+    );
+
+
+    // Rola para o final
     chatContent.scrollTop =
         chatContent.scrollHeight;
+
 
     return message;
 }
 
 
 // ==========================================
-// NOVO: DIGITAÇÃO DA CCSIA
+// RESPOSTA COM ANIMAÇÃO DE DIGITAÇÃO
 // ==========================================
 
-async function addTypingMessage(text, type) {
+async function addTypingMessage(
+    text,
+    type
+) {
 
-    const message = document.createElement("div");
+    const message =
+        document.createElement("div");
+
 
     message.classList.add(
         "message",
         type
     );
 
-    const avatar = createAvatar(type);
 
-    const content = document.createElement("div");
+    // Avatar
+    const avatar =
+        createAvatar(type);
+
+
+    // Conteúdo
+    const content =
+        document.createElement("div");
+
 
     content.classList.add(
         "message-content"
     );
 
-    const name = document.createElement("div");
+
+    // Nome
+    const name =
+        document.createElement("div");
+
 
     name.classList.add(
         "message-name"
     );
 
-    name.textContent = "CCSIA";
 
-    const textElement = document.createElement("div");
+    name.textContent =
+        "CCSIA";
+
+
+    // Texto
+    const textElement =
+        document.createElement("div");
+
 
     textElement.classList.add(
         "message-text"
     );
 
-    content.appendChild(name);
 
-    content.appendChild(textElement);
+    content.appendChild(
+        name
+    );
 
-    message.appendChild(avatar);
+    content.appendChild(
+        textElement
+    );
 
-    message.appendChild(content);
 
-    chatContent.appendChild(message);
+    message.appendChild(
+        avatar
+    );
+
+    message.appendChild(
+        content
+    );
+
+
+    chatContent.appendChild(
+        message
+    );
 
 
     // ==========================================
-    // DIGITAÇÃO
+    // EFEITO DE DIGITAÇÃO
     // ==========================================
 
     let currentText = "";
 
     const speed = 12;
 
-    for (let i = 0; i < text.length; i++) {
 
-        currentText += text[i];
+    for (
+        let i = 0;
+        i < text.length;
+        i++
+    ) {
+
+        currentText +=
+            text[i];
+
 
         textElement.innerHTML =
-            formatAIResponse(currentText);
+            formatAIResponse(
+                currentText
+            );
+
 
         chatContent.scrollTop =
             chatContent.scrollHeight;
 
+
         await new Promise(
-            resolve => setTimeout(resolve, speed)
+            resolve =>
+                setTimeout(
+                    resolve,
+                    speed
+                )
         );
     }
+
+
+    // ==========================================
+    // BOTÃO COPIAR
+    // ==========================================
+
+    const copyButton =
+        createCopyButton(text);
+
+
+    content.appendChild(
+        copyButton
+    );
+
+
+    chatContent.scrollTop =
+        chatContent.scrollHeight;
+
 
     return message;
 }
@@ -342,70 +565,116 @@ async function addTypingMessage(text, type) {
 
 function addLoadingMessage() {
 
-    const message = document.createElement("div");
+    const message =
+        document.createElement("div");
+
 
     message.classList.add(
         "message",
         "ai"
     );
 
-    const avatar = createAvatar("ai");
 
-    const content = document.createElement("div");
+    // Logo CCSIA
+    const avatar =
+        createAvatar("ai");
+
+
+    const content =
+        document.createElement("div");
+
 
     content.classList.add(
         "message-content"
     );
 
-    const name = document.createElement("div");
+
+    const name =
+        document.createElement("div");
+
 
     name.classList.add(
         "message-name"
     );
 
-    name.textContent = "CCSIA";
 
-    const text = document.createElement("div");
+    name.textContent =
+        "CCSIA";
+
+
+    const text =
+        document.createElement("div");
+
 
     text.classList.add(
         "message-text"
     );
 
-    const typing = document.createElement("div");
+
+    // Pontinhos de carregamento
+    const typing =
+        document.createElement("div");
+
 
     typing.classList.add(
         "typing"
     );
 
-    for (let i = 0; i < 3; i++) {
+
+    for (
+        let i = 0;
+        i < 3;
+        i++
+    ) {
 
         const dot =
             document.createElement("span");
 
-        typing.appendChild(dot);
+
+        typing.appendChild(
+            dot
+        );
     }
 
-    text.appendChild(typing);
 
-    content.appendChild(name);
+    text.appendChild(
+        typing
+    );
 
-    content.appendChild(text);
 
-    message.appendChild(avatar);
+    content.appendChild(
+        name
+    );
 
-    message.appendChild(content);
+    content.appendChild(
+        text
+    );
 
-    chatContent.appendChild(message);
+
+    message.appendChild(
+        avatar
+    );
+
+    message.appendChild(
+        content
+    );
+
+
+    chatContent.appendChild(
+        message
+    );
+
 
     chatContent.scrollTop =
         chatContent.scrollHeight;
+
 
     return message;
 }
 
 
 // ==========================================
-// ENTER ENVIA
+// ENTER ENVIA A MENSAGEM
 // ==========================================
 
 messageInput.addEventListener(
@@ -436,14 +705,16 @@ sendButton.addEventListener(
 
 
 // ==========================================
-// AJUSTA ALTURA
+// AJUSTA ALTURA DO CAMPO
 // ==========================================
 
 messageInput.addEventListener(
     "input",
     function() {
 
-        this.style.height = "auto";
+        this.style.height =
+            "auto";
+
 
         this.style.height =
             Math.min(
@@ -453,6 +724,10 @@ messageInput.addEventListener(
     }
 );
 
+
+// ==========================================
+// RESET TEXTAREA
+// ==========================================
 
 function resetTextarea() {
 
@@ -474,15 +749,20 @@ document.addEventListener(
                 ".suggestion"
             );
 
+
         if (!suggestion) return;
+
 
         const question =
             suggestion.dataset.question;
 
+
         messageInput.value =
             question;
 
+
         messageInput.focus();
+
 
         messageInput.dispatchEvent(
             new Event("input")
