@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -15,26 +17,49 @@
 
     <title>CCSIA - Caixinha do Saber</title>
 
-    <!-- FONTES -->
+
+    <!-- ==========================================
+         FONTES
+         ========================================== -->
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
 
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
         rel="stylesheet"
     >
 
-    <link rel="stylesheet" href="style.css">
+
+    <!-- CSS -->
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
+
 
 <body>
 
     <div class="app">
 
-        <!-- BARRA LATERAL -->
+
+        <!-- ==========================================
+             BARRA LATERAL
+             ========================================== -->
+
         <aside class="sidebar">
 
+
             <!-- LOGO CCSIA -->
+
             <div class="brand">
 
                 <img
@@ -47,7 +72,11 @@
 
 
             <!-- NOVA CONVERSA -->
-            <button class="new-chat" id="newChatButton">
+
+            <button
+                class="new-chat"
+                id="newChatButton"
+            >
 
                 <span>＋</span>
 
@@ -57,7 +86,11 @@
 
 
             <!-- INFORMAÇÕES -->
+
             <div class="sidebar-info">
+
+
+                <!-- EDUCAÇÃO -->
 
                 <div class="info-card">
 
@@ -80,6 +113,8 @@
                 </div>
 
 
+                <!-- CONHECIMENTO -->
+
                 <div class="info-card">
 
                     <span class="info-icon">
@@ -100,10 +135,12 @@
 
                 </div>
 
+
             </div>
 
 
             <!-- CRIADOR -->
+
             <div class="creator">
 
                 <span>
@@ -116,15 +153,26 @@
 
             </div>
 
+
         </aside>
 
 
-        <!-- ÁREA PRINCIPAL -->
+
+        <!-- ==========================================
+             ÁREA PRINCIPAL
+             ========================================== -->
+
         <main class="chat-area">
 
 
-            <!-- CABEÇALHO -->
+            <!-- ==========================================
+                 CABEÇALHO
+                 ========================================== -->
+
             <header class="topbar">
+
+
+                <!-- MARCA MOBILE -->
 
                 <div class="mobile-brand">
 
@@ -137,27 +185,57 @@
                 </div>
 
 
-                <div class="status">
+                <!-- AÇÕES DO CABEÇALHO -->
 
-                    <span class="status-dot"></span>
+                <div class="topbar-actions">
 
-                    <span>
-                        CCSIA online
-                    </span>
+
+                    <!-- BOTÃO MODO ESCURO -->
+
+                    <button
+                        id="themeButton"
+                        class="theme-button"
+                        aria-label="Ativar modo escuro"
+                        title="Modo escuro"
+                    >
+                        🌙
+                    </button>
+
+
+                    <!-- STATUS -->
+
+                    <div class="status">
+
+                        <span class="status-dot"></span>
+
+                        <span>
+                            CCSIA online
+                        </span>
+
+                    </div>
+
 
                 </div>
+
 
             </header>
 
 
-            <!-- CONTEÚDO DO CHAT -->
+
+            <!-- ==========================================
+                 CONTEÚDO DO CHAT
+                 ========================================== -->
+
             <section
                 class="chat-content"
                 id="chatContent"
             >
 
 
-                <!-- TELA INICIAL -->
+                <!-- ==========================================
+                     TELA INICIAL
+                     ========================================== -->
+
                 <div
                     class="welcome"
                     id="welcome"
@@ -165,6 +243,7 @@
 
 
                     <!-- LOGO CENTRAL -->
+
                     <div class="welcome-icon">
 
                         <img
@@ -175,27 +254,42 @@
                     </div>
 
 
+                    <!-- TÍTULO -->
+
                     <h2>
                         Olá! Eu sou a CCSIA.
                     </h2>
 
 
+                    <!-- DESCRIÇÃO -->
+
                     <p>
+
                         A Inteligência Artificial da
+
                         <strong>
                             Caixinha do Saber
                         </strong>.
+
                     </p>
 
 
                     <span class="welcome-description">
+
                         Faça uma pergunta e comece a aprender.
+
                     </span>
 
 
-                    <!-- SUGESTÕES -->
+
+                    <!-- ==========================================
+                         SUGESTÕES
+                         ========================================== -->
+
                     <div class="suggestions">
 
+
+                        <!-- MATEMÁTICA -->
 
                         <button
                             class="suggestion"
@@ -221,6 +315,9 @@
                         </button>
 
 
+
+                        <!-- HISTÓRIA -->
+
                         <button
                             class="suggestion"
                             data-question="Explique o que foi a Revolução Industrial."
@@ -245,6 +342,9 @@
                         </button>
 
 
+
+                        <!-- TECNOLOGIA -->
+
                         <button
                             class="suggestion"
                             data-question="Explique como funciona a programação para iniciantes."
@@ -268,6 +368,9 @@
 
                         </button>
 
+
+
+                        <!-- INTELIGÊNCIA ARTIFICIAL -->
 
                         <button
                             class="suggestion"
@@ -295,15 +398,23 @@
 
                     </div>
 
+
                 </div>
+
 
             </section>
 
 
-            <!-- ÁREA DE DIGITAÇÃO -->
+
+            <!-- ==========================================
+                 ÁREA DE DIGITAÇÃO
+                 ========================================== -->
+
             <div class="input-area">
 
+
                 <div class="input-container">
+
 
                     <textarea
                         id="messageInput"
@@ -311,30 +422,47 @@
                         rows="1"
                     ></textarea>
 
+
                     <button
                         id="sendButton"
                         class="send-button"
                         aria-label="Enviar pergunta"
                     >
+
                         ➤
+
                     </button>
+
 
                 </div>
 
 
+                <!-- AVISO -->
+
                 <p class="disclaimer">
+
                     A CCSIA pode cometer erros.
                     Sempre verifique informações importantes.
+
                 </p>
+
 
             </div>
 
+
         </main>
+
 
     </div>
 
 
+
+    <!-- ==========================================
+         JAVASCRIPT
+         ========================================== -->
+
     <script src="script.js"></script>
 
 </body>
+
 </html>
