@@ -985,3 +985,38 @@ textarea::placeholder {
     display: block;
     border-radius: 8px;
 }
+/* ==========================================
+   ANIMAÇÃO SUAVE DAS RESPOSTAS DA CCSIA
+   ========================================== */
+
+.message.ai .message-content {
+    animation: aiContentAppear 0.45s ease-out;
+}
+
+.message.ai .message-avatar {
+    animation: aiAvatarAppear 0.4s ease-out;
+}
+
+@keyframes aiContentAppear {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes aiAvatarAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
