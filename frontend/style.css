@@ -968,3 +968,20 @@ textarea::placeholder {
         font-size: 9px;
     }
 }
+/* ==========================================
+   LOGO DA CCSIA NOS AVATARES
+   ========================================== */
+
+.ai-avatar {
+    background: #F5E9E0;
+    padding: 5px;
+    overflow: hidden;
+}
+
+.ai-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    border-radius: 8px;
+}
