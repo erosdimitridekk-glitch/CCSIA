@@ -94,6 +94,41 @@ function formatAIResponse(text) {
 
 
 // ==========================================
+// CRIA O AVATAR DA MENSAGEM
+// ==========================================
+
+function createAvatar(type) {
+
+    const avatar = document.createElement("div");
+
+    avatar.classList.add(
+        "message-avatar",
+        type === "ai"
+            ? "ai-avatar"
+            : "user-avatar"
+    );
+
+    // Avatar da CCSIA
+    if (type === "ai") {
+
+        const logo = document.createElement("img");
+
+        logo.src = "logo.png";
+        logo.alt = "Logo da CCSIA";
+
+        avatar.appendChild(logo);
+
+    } else {
+
+        // Avatar do usuário
+        avatar.textContent = "👤";
+    }
+
+    return avatar;
+}
+
+
+// ==========================================
 // ENVIAR MENSAGEM
 // ==========================================
 
@@ -181,19 +216,9 @@ function addMessage(text, type) {
         type
     );
 
-    const avatar = document.createElement("div");
 
-    avatar.classList.add(
-        "message-avatar",
-        type === "ai"
-            ? "ai-avatar"
-            : "user-avatar"
-    );
-
-    avatar.textContent =
-        type === "ai"
-            ? "🧠"
-            : "👤";
+    // Cria o avatar
+    const avatar = createAvatar(type);
 
 
     const content = document.createElement("div");
@@ -222,10 +247,7 @@ function addMessage(text, type) {
     );
 
 
-    // ==========================================
-    // AQUI ESTÁ A MUDANÇA PRINCIPAL
-    // ==========================================
-
+    // Resposta da IA
     if (type === "ai") {
 
         textElement.innerHTML =
@@ -233,6 +255,7 @@ function addMessage(text, type) {
 
     } else {
 
+        // Mensagem do usuário
         textElement.textContent =
             text;
     }
@@ -271,14 +294,8 @@ function addLoadingMessage() {
     );
 
 
-    const avatar = document.createElement("div");
-
-    avatar.classList.add(
-        "message-avatar",
-        "ai-avatar"
-    );
-
-    avatar.textContent = "🧠";
+    // Avatar com a logo da CCSIA
+    const avatar = createAvatar("ai");
 
 
     const content = document.createElement("div");
@@ -304,6 +321,7 @@ function addLoadingMessage() {
     );
 
 
+    // Animação de carregamento
     const typing = document.createElement("div");
 
     typing.classList.add(
