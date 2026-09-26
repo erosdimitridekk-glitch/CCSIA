@@ -7,12 +7,15 @@
 :root {
     --primary: #8B4513;
     --primary-dark: #6F3410;
+
     --background: #f4f7ff;
     --white: #ffffff;
+
     --text: #1e293b;
     --muted: #64748b;
     --border: #e2e8f0;
 }
+
 
 /* ============================= */
 /* BASE */
@@ -26,11 +29,20 @@ body {
 
 body {
     font-family: "Poppins", "Segoe UI", Arial, sans-serif;
+
     background: var(--background);
+
     color: var(--text);
+
     height: 100vh;
+
     overflow: hidden;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease;
 }
+
 
 /* ============================= */
 /* APP */
@@ -38,9 +50,11 @@ body {
 
 .app {
     display: flex;
+
     width: 100%;
     height: 100vh;
 }
+
 
 /* ============================= */
 /* SIDEBAR */
@@ -58,7 +72,12 @@ body {
 
     display: flex;
     flex-direction: column;
+
+    transition:
+        background 0.3s ease,
+        border-color 0.3s ease;
 }
+
 
 /* ============================= */
 /* LOGO DA LATERAL */
@@ -82,10 +101,12 @@ body {
 
     object-fit: contain;
 
-    filter: drop-shadow(
-        0 6px 10px rgba(91, 46, 12, 0.12)
-    );
+    filter:
+        drop-shadow(
+            0 6px 10px rgba(91, 46, 12, 0.12)
+        );
 }
+
 
 /* ============================= */
 /* NOVA CONVERSA */
@@ -96,11 +117,12 @@ body {
 
     border: none;
 
-    background: linear-gradient(
-        135deg,
-        var(--primary),
-        #6F3410
-    );
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            #6F3410
+        );
 
     color: white;
 
@@ -129,6 +151,7 @@ body {
         0 10px 22px rgba(139, 69, 19, 0.3);
 }
 
+
 /* ============================= */
 /* CARDS */
 /* ============================= */
@@ -156,6 +179,10 @@ body {
     background: #f8fafc;
 
     border: 1px solid #eef2f7;
+
+    transition:
+        background 0.3s ease,
+        border-color 0.3s ease;
 }
 
 .info-icon {
@@ -172,6 +199,9 @@ body {
     border-radius: 11px;
 
     font-size: 18px;
+
+    transition:
+        background 0.3s ease;
 }
 
 .info-card strong {
@@ -188,6 +218,7 @@ body {
     color: var(--muted);
 }
 
+
 /* ============================= */
 /* CRIADOR */
 /* ============================= */
@@ -198,6 +229,9 @@ body {
     padding: 18px 10px 5px;
 
     border-top: 1px solid var(--border);
+
+    transition:
+        border-color 0.3s ease;
 }
 
 .creator span {
@@ -216,7 +250,10 @@ body {
     font-weight: 600;
 
     color: #334155;
+
+    transition: color 0.3s ease;
 }
+
 
 /* ============================= */
 /* CHAT */
@@ -238,7 +275,11 @@ body {
             transparent 35%
         ),
         var(--background);
+
+    transition:
+        background 0.3s ease;
 }
+
 
 /* ============================= */
 /* TOPO */
@@ -249,7 +290,8 @@ body {
 
     padding: 0 30px;
 
-    background: rgba(255, 255, 255, 0.85);
+    background:
+        rgba(255, 255, 255, 0.85);
 
     backdrop-filter: blur(10px);
 
@@ -260,7 +302,65 @@ body {
     align-items: center;
 
     justify-content: flex-end;
+
+    transition:
+        background 0.3s ease,
+        border-color 0.3s ease;
 }
+
+
+/* ============================= */
+/* AÇÕES DO TOPO */
+/* ============================= */
+
+.topbar-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+}
+
+
+/* ============================= */
+/* BOTÃO TEMA */
+/* ============================= */
+
+.theme-button {
+    width: 38px;
+    height: 38px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 11px;
+
+    background: white;
+
+    cursor: pointer;
+
+    font-size: 17px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    transition:
+        0.25s,
+        background 0.3s ease,
+        border-color 0.3s ease;
+}
+
+.theme-button:hover {
+    transform: translateY(-2px);
+
+    background: #F5E9E0;
+}
+
+
+/* ============================= */
+/* STATUS */
+/* ============================= */
 
 .status {
     display: flex;
@@ -286,7 +386,10 @@ body {
         0 0 0 5px rgba(34, 197, 94, 0.12);
 }
 
+
+/* ============================= */
 /* LOGO DO CELULAR */
+/* ============================= */
 
 .mobile-brand {
     display: none;
@@ -301,6 +404,7 @@ body {
     display: block;
 }
 
+
 /* ============================= */
 /* ÁREA DO CHAT */
 /* ============================= */
@@ -312,6 +416,7 @@ body {
 
     padding: 50px 25px;
 }
+
 
 /* ============================= */
 /* TELA INICIAL */
@@ -326,6 +431,7 @@ body {
 
     text-align: center;
 }
+
 
 /* ============================= */
 /* LOGO CENTRAL */
@@ -366,6 +472,7 @@ body {
         );
 }
 
+
 /* ============================= */
 /* TEXTO DE BOAS-VINDAS */
 /* ============================= */
@@ -397,6 +504,7 @@ body {
 
     font-size: 13px;
 }
+
 
 /* ============================= */
 /* SUGESTÕES */
@@ -434,7 +542,10 @@ body {
 
     cursor: pointer;
 
-    transition: 0.25s;
+    transition:
+        0.25s,
+        background 0.3s ease,
+        border-color 0.3s ease;
 
     color: var(--text);
 
@@ -467,6 +578,9 @@ body {
     border-radius: 13px;
 
     font-size: 22px;
+
+    transition:
+        background 0.3s ease;
 }
 
 .suggestion strong {
@@ -486,6 +600,7 @@ body {
 
     font-size: 11px;
 }
+
 
 /* ============================= */
 /* MENSAGENS */
@@ -525,14 +640,33 @@ body {
 
 .ai-avatar {
     background: #EAD7C7;
+
+    padding: 5px;
+
+    overflow: hidden;
+
+    transition:
+        background 0.3s ease;
+}
+
+.ai-avatar img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    display: block;
+
+    border-radius: 8px;
 }
 
 .user-avatar {
-    background: linear-gradient(
-        135deg,
-        #8B4513,
-        #6F3410
-    );
+    background:
+        linear-gradient(
+            135deg,
+            #8B4513,
+            #6F3410
+        );
 
     color: white;
 }
@@ -550,6 +684,7 @@ body {
 
     margin-bottom: 6px;
 }
+
 
 /* ============================= */
 /* RESPOSTA DA IA */
@@ -584,7 +719,13 @@ body {
 
     box-shadow:
         0 4px 15px rgba(15, 23, 42, 0.03);
+
+    transition:
+        background 0.3s ease,
+        border-color 0.3s ease,
+        color 0.3s ease;
 }
+
 
 /* ============================= */
 /* TEXTO DO USUÁRIO */
@@ -595,11 +736,12 @@ body {
 }
 
 .message.user .message-text {
-    background: linear-gradient(
-        135deg,
-        #8B4513,
-        #5C2E0C
-    );
+    background:
+        linear-gradient(
+            135deg,
+            #8B4513,
+            #5C2E0C
+        );
 
     color: white;
 
@@ -621,6 +763,7 @@ body {
 .message.ai .message-text {
     border-bottom-left-radius: 5px;
 }
+
 
 /* ============================= */
 /* FORMATAÇÃO DAS RESPOSTAS */
@@ -689,6 +832,7 @@ body {
     font-size: 13px;
 }
 
+
 /* ============================= */
 /* DIGITANDO */
 /* ============================= */
@@ -737,6 +881,7 @@ body {
     }
 }
 
+
 /* ============================= */
 /* CAMPO DE MENSAGEM */
 /* ============================= */
@@ -771,7 +916,10 @@ body {
     box-shadow:
         0 10px 35px rgba(15, 23, 42, 0.08);
 
-    transition: 0.2s;
+    transition:
+        0.2s,
+        background 0.3s ease,
+        border-color 0.3s ease;
 }
 
 .input-container:focus-within {
@@ -825,11 +973,12 @@ textarea::placeholder {
 
     border-radius: 13px;
 
-    background: linear-gradient(
-        135deg,
-        #8B4513,
-        #5C2E0C
-    );
+    background:
+        linear-gradient(
+            135deg,
+            #8B4513,
+            #5C2E0C
+        );
 
     color: white;
 
@@ -870,6 +1019,443 @@ textarea::placeholder {
 
     color: #94a3b8;
 }
+
+
+/* ============================= */
+/* BOTÃO COPIAR */
+/* ============================= */
+
+.copy-button {
+    margin-top: 9px;
+
+    padding: 6px 11px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    color: #64748b;
+
+    font-family: "Poppins", sans-serif;
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+        all 0.2s ease;
+}
+
+.copy-button:hover {
+    background: #F5E9E0;
+
+    color: #6F3410;
+
+    border-color: #D2B19A;
+
+    transform: translateY(-1px);
+}
+
+.copy-button.copied {
+    background: #f0fdf4;
+
+    color: #16a34a;
+
+    border-color: #bbf7d0;
+}
+
+
+/* ============================= */
+/* ANIMAÇÃO DAS MENSAGENS */
+/* ============================= */
+
+.message {
+    animation:
+        messageAppear 0.3s ease;
+}
+
+@keyframes messageAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message.ai .message-content {
+    animation:
+        aiContentAppear 0.45s ease-out;
+}
+
+.message.ai .message-avatar {
+    animation:
+        aiAvatarAppear 0.4s ease-out;
+}
+
+.message.ai .message-text {
+    animation:
+        textFadeIn 0.5s ease-out;
+}
+
+@keyframes aiContentAppear {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(10px)
+            scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+@keyframes aiAvatarAppear {
+
+    from {
+        opacity: 0;
+
+        transform:
+            scale(0.85);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            scale(1);
+    }
+}
+
+@keyframes textFadeIn {
+
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+
+/* ================================================== */
+/*                MODO ESCURO                         */
+/* ================================================== */
+
+body.dark-mode {
+
+    --background: #12100f;
+
+    --white: #1b1816;
+
+    --text: #f5f5f5;
+
+    --muted: #a8a29e;
+
+    --border: #302a26;
+}
+
+
+/* ============================= */
+/* FUNDO PRINCIPAL */
+/* ============================= */
+
+body.dark-mode {
+    background: var(--background);
+
+    color: var(--text);
+}
+
+
+/* ============================= */
+/* SIDEBAR ESCURA */
+/* ============================= */
+
+body.dark-mode .sidebar {
+
+    background: #1b1816;
+
+    border-color: var(--border);
+}
+
+
+/* ============================= */
+/* LOGO DA SIDEBAR */
+/* ============================= */
+
+body.dark-mode .sidebar-logo {
+
+    filter:
+        drop-shadow(
+            0 6px 12px
+            rgba(0, 0, 0, 0.35)
+        );
+}
+
+
+/* ============================= */
+/* CARDS DA SIDEBAR */
+/* ============================= */
+
+body.dark-mode .info-card {
+
+    background: #211d1a;
+
+    border-color: #302a26;
+}
+
+body.dark-mode .info-icon {
+
+    background: #2a2420;
+}
+
+
+/* ============================= */
+/* CRIADOR */
+/* ============================= */
+
+body.dark-mode .creator {
+
+    border-color: var(--border);
+}
+
+body.dark-mode .creator strong {
+
+    color: #d6d3d1;
+}
+
+
+/* ============================= */
+/* ÁREA PRINCIPAL */
+/* ============================= */
+
+body.dark-mode .chat-area {
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(139, 69, 19, 0.18),
+            transparent 35%
+        ),
+        var(--background);
+}
+
+
+/* ============================= */
+/* TOPO */
+/* ============================= */
+
+body.dark-mode .topbar {
+
+    background:
+        rgba(27, 24, 22, 0.88);
+
+    border-color: var(--border);
+}
+
+
+/* ============================= */
+/* BOTÃO DE TEMA */
+/* ============================= */
+
+body.dark-mode .theme-button {
+
+    background: #211d1a;
+
+    border-color: #3b322c;
+}
+
+body.dark-mode .theme-button:hover {
+
+    background: #30231b;
+}
+
+
+/* ============================= */
+/* TELA INICIAL */
+/* ============================= */
+
+body.dark-mode .welcome h2 {
+
+    color: #ffffff;
+}
+
+body.dark-mode .welcome > p {
+
+    color: #a8a29e;
+}
+
+body.dark-mode .welcome-description {
+
+    color: #78716c;
+}
+
+
+/* ============================= */
+/* SUGESTÕES */
+/* ============================= */
+
+body.dark-mode .suggestion {
+
+    background: #1b1816;
+
+    border-color: var(--border);
+
+    color: #f5f5f5;
+}
+
+body.dark-mode .suggestion:hover {
+
+    background: #211d1a;
+
+    border-color: #8B4513;
+}
+
+body.dark-mode .suggestion > span {
+
+    background: #30231b;
+}
+
+
+/* ============================= */
+/* AVATAR DA CCSIA */
+/* ============================= */
+
+body.dark-mode .ai-avatar {
+
+    background: #30231b;
+}
+
+
+/* ============================= */
+/* MENSAGEM DA IA */
+/* ============================= */
+
+body.dark-mode .message-text {
+
+    background: #211d1a;
+
+    border-color: var(--border);
+
+    color: #f5f5f5;
+}
+
+
+/* ============================= */
+/* TÍTULOS DA IA */
+/* ============================= */
+
+body.dark-mode .message-text h1,
+body.dark-mode .message-text h2,
+body.dark-mode .message-text h3 {
+
+    color: #D2A17D;
+}
+
+
+/* ============================= */
+/* CÓDIGO */
+/* ============================= */
+
+body.dark-mode .message-text code {
+
+    background: #30231b;
+
+    color: #E2B896;
+}
+
+
+/* ============================= */
+/* CAMPO DE TEXTO */
+/* ============================= */
+
+body.dark-mode .input-area {
+
+    background:
+        linear-gradient(
+            transparent,
+            var(--background) 25%
+        );
+}
+
+body.dark-mode .input-container {
+
+    background: #1b1816;
+
+    border-color: var(--border);
+}
+
+body.dark-mode textarea {
+
+    color: #f5f5f5;
+}
+
+body.dark-mode textarea::placeholder {
+
+    color: #78716c;
+}
+
+
+/* ============================= */
+/* BOTÃO COPIAR */
+/* ============================= */
+
+body.dark-mode .copy-button {
+
+    background: #211d1a;
+
+    border-color: #3b322c;
+
+    color: #a8a29e;
+}
+
+body.dark-mode .copy-button:hover {
+
+    background: #30231b;
+
+    color: #D2A17D;
+}
+
+
+/* ============================= */
+/* TRANSIÇÃO GERAL */
+/* ============================= */
+
+body,
+.sidebar,
+.topbar,
+.chat-area,
+.info-card,
+.info-icon,
+.suggestion,
+.message-text,
+.input-container,
+.theme-button,
+.copy-button {
+
+    transition:
+        background 0.3s ease,
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        color 0.3s ease;
+}
+
 
 /* ============================= */
 /* CELULAR */
@@ -914,13 +1500,29 @@ textarea::placeholder {
         object-fit: contain;
     }
 
+    .topbar-actions {
+
+        gap: 10px;
+    }
+
+    .theme-button {
+
+        width: 34px;
+        height: 34px;
+
+        font-size: 15px;
+    }
+
     .chat-content {
+
         padding: 35px 14px;
     }
 
-    /* LOGO CENTRAL NO CELULAR */
+
+    /* LOGO CENTRAL */
 
     .welcome-icon {
+
         width: 100px;
         height: 100px;
 
@@ -928,36 +1530,54 @@ textarea::placeholder {
     }
 
     .welcome-icon img {
+
         width: 100px;
         height: 100px;
     }
 
+
     .welcome h2 {
+
         font-size: 23px;
     }
 
     .welcome > p {
+
         font-size: 14px;
     }
 
+
+    /* SUGESTÕES */
+
     .suggestions {
+
         grid-template-columns: 1fr;
 
         margin-top: 25px;
     }
 
+
+    /* MENSAGENS */
+
     .message-content {
+
         max-width: 82%;
     }
 
     .message-text {
+
         font-size: 14px;
 
         line-height: 1.65;
     }
 
+
+    /* CAMPO */
+
     .input-area {
-        padding: 10px 12px 15px;
+
+        padding:
+            10px 12px 15px;
 
         position: sticky;
 
@@ -965,58 +1585,7 @@ textarea::placeholder {
     }
 
     .disclaimer {
+
         font-size: 9px;
-    }
-}
-/* ==========================================
-   LOGO DA CCSIA NOS AVATARES
-   ========================================== */
-
-.ai-avatar {
-    background: #F5E9E0;
-    padding: 5px;
-    overflow: hidden;
-}
-
-.ai-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-    border-radius: 8px;
-}
-/* ==========================================
-   ANIMAÇÃO SUAVE DAS RESPOSTAS DA CCSIA
-   ========================================== */
-
-.message.ai .message-content {
-    animation: aiContentAppear 0.45s ease-out;
-}
-
-.message.ai .message-avatar {
-    animation: aiAvatarAppear 0.4s ease-out;
-}
-
-@keyframes aiContentAppear {
-    from {
-        opacity: 0;
-        transform: translateY(10px) scale(0.98);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-@keyframes aiAvatarAppear {
-    from {
-        opacity: 0;
-        transform: scale(0.85);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1);
     }
 }
