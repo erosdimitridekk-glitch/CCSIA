@@ -2,13 +2,8 @@
 <html lang="pt-BR">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <meta
         name="description"
@@ -17,13 +12,7 @@
 
     <title>CCSIA - Caixinha do Saber</title>
 
-
-    <!-- ==========================================
-         FONTES
-         ========================================== -->
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
-
     <link
         rel="preconnect"
         href="https://fonts.gstatic.com"
@@ -35,32 +24,20 @@
         rel="stylesheet"
     >
 
-
-    <!-- CSS -->
-
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
-
+    <link rel="stylesheet" href="style.css">
 </head>
-
 
 <body>
 
     <div class="app">
 
+        <!-- ================================= -->
+        <!-- MENU LATERAL -->
+        <!-- ================================= -->
 
-        <!-- ==========================================
-             BARRA LATERAL
-             ========================================== -->
+        <aside class="sidebar" id="sidebar">
 
-        <aside class="sidebar">
-
-
-            <!-- LOGO CCSIA -->
-
-            <div class="brand">
+            <div class="sidebar-header">
 
                 <img
                     src="logo.png"
@@ -68,111 +45,106 @@
                     class="sidebar-logo"
                 >
 
+                <button
+                    id="closeMenuButton"
+                    class="close-menu"
+                    aria-label="Fechar menu"
+                >
+                    ✕
+                </button>
+
             </div>
-
-
-            <!-- NOVA CONVERSA -->
 
             <button
                 class="new-chat"
                 id="newChatButton"
             >
-
                 <span>＋</span>
-
                 Nova conversa
-
             </button>
 
+            <!-- HISTÓRICO -->
 
-            <!-- INFORMAÇÕES -->
+            <div class="history-section">
+
+                <div class="history-title">
+                    <span>Conversas</span>
+                </div>
+
+                <div
+                    class="history-list"
+                    id="historyList"
+                >
+                    <!-- As conversas serão colocadas aqui pelo JavaScript -->
+                </div>
+
+            </div>
 
             <div class="sidebar-info">
 
-
-                <!-- EDUCAÇÃO -->
-
                 <div class="info-card">
 
-                    <span class="info-icon">
-                        🎓
-                    </span>
+                    <span class="info-icon">🎓</span>
 
                     <div>
-
-                        <strong>
-                            Educação
-                        </strong>
-
-                        <p>
-                            Aprenda de forma simples.
-                        </p>
-
+                        <strong>Educação</strong>
+                        <p>Aprenda de forma simples.</p>
                     </div>
 
                 </div>
 
-
-                <!-- CONHECIMENTO -->
-
                 <div class="info-card">
 
-                    <span class="info-icon">
-                        💡
-                    </span>
+                    <span class="info-icon">💡</span>
 
                     <div>
-
-                        <strong>
-                            Conhecimento
-                        </strong>
-
-                        <p>
-                            Explore novos assuntos.
-                        </p>
-
+                        <strong>Conhecimento</strong>
+                        <p>Explore novos assuntos.</p>
                     </div>
 
                 </div>
-
 
             </div>
-
-
-            <!-- CRIADOR -->
 
             <div class="creator">
 
-                <span>
-                    Projeto criado por
-                </span>
+                <span>Projeto criado por</span>
 
-                <strong>
-                    Equipe do Eros Dimitri
-                </strong>
+                <strong>Equipe do Eros Dimitri</strong>
 
             </div>
 
-
         </aside>
 
+        <!-- FUNDO DO MENU NO CELULAR -->
+
+        <div
+            class="menu-overlay"
+            id="menuOverlay"
+        ></div>
 
 
-        <!-- ==========================================
-             ÁREA PRINCIPAL
-             ========================================== -->
+        <!-- ================================= -->
+        <!-- ÁREA PRINCIPAL -->
+        <!-- ================================= -->
 
         <main class="chat-area">
 
-
-            <!-- ==========================================
-                 CABEÇALHO
-                 ========================================== -->
-
             <header class="topbar">
 
+                <!-- BOTÃO MENU MOBILE -->
 
-                <!-- MARCA MOBILE -->
+                <button
+                    id="menuButton"
+                    class="menu-button"
+                    aria-label="Abrir menu"
+                    title="Abrir menu"
+                >
+                    ☰
+                </button>
+
+
+                <!-- LOGO MOBILE -->
 
                 <div class="mobile-brand">
 
@@ -185,12 +157,9 @@
                 </div>
 
 
-                <!-- AÇÕES DO CABEÇALHO -->
-
                 <div class="topbar-actions">
 
-
-                    <!-- BOTÃO MODO ESCURO -->
+                    <!-- MODO ESCURO -->
 
                     <button
                         id="themeButton"
@@ -208,41 +177,28 @@
 
                         <span class="status-dot"></span>
 
-                        <span>
-                            CCSIA online
-                        </span>
+                        <span>CCSIA online</span>
 
                     </div>
 
-
                 </div>
-
 
             </header>
 
 
-
-            <!-- ==========================================
-                 CONTEÚDO DO CHAT
-                 ========================================== -->
+            <!-- ================================= -->
+            <!-- CHAT -->
+            <!-- ================================= -->
 
             <section
                 class="chat-content"
                 id="chatContent"
             >
 
-
-                <!-- ==========================================
-                     TELA INICIAL
-                     ========================================== -->
-
                 <div
                     class="welcome"
                     id="welcome"
                 >
-
-
-                    <!-- LOGO CENTRAL -->
 
                     <div class="welcome-icon">
 
@@ -254,57 +210,36 @@
                     </div>
 
 
-                    <!-- TÍTULO -->
-
                     <h2>
                         Olá! Eu sou a CCSIA.
                     </h2>
 
 
-                    <!-- DESCRIÇÃO -->
-
                     <p>
-
                         A Inteligência Artificial da
-
-                        <strong>
-                            Caixinha do Saber
-                        </strong>.
-
+                        <strong>Caixinha do Saber</strong>.
                     </p>
 
 
                     <span class="welcome-description">
-
                         Faça uma pergunta e comece a aprender.
-
                     </span>
 
 
-
-                    <!-- ==========================================
-                         SUGESTÕES
-                         ========================================== -->
+                    <!-- SUGESTÕES -->
 
                     <div class="suggestions">
-
-
-                        <!-- MATEMÁTICA -->
 
                         <button
                             class="suggestion"
                             data-question="Explique a matemática de uma forma simples."
                         >
 
-                            <span>
-                                📐
-                            </span>
+                            <span>📐</span>
 
                             <div>
 
-                                <strong>
-                                    Matemática
-                                </strong>
+                                <strong>Matemática</strong>
 
                                 <small>
                                     Aprenda um conceito
@@ -315,23 +250,16 @@
                         </button>
 
 
-
-                        <!-- HISTÓRIA -->
-
                         <button
                             class="suggestion"
                             data-question="Explique o que foi a Revolução Industrial."
                         >
 
-                            <span>
-                                🌎
-                            </span>
+                            <span>🌎</span>
 
                             <div>
 
-                                <strong>
-                                    História
-                                </strong>
+                                <strong>História</strong>
 
                                 <small>
                                     Conheça acontecimentos
@@ -342,23 +270,16 @@
                         </button>
 
 
-
-                        <!-- TECNOLOGIA -->
-
                         <button
                             class="suggestion"
                             data-question="Explique como funciona a programação para iniciantes."
                         >
 
-                            <span>
-                                💻
-                            </span>
+                            <span>💻</span>
 
                             <div>
 
-                                <strong>
-                                    Tecnologia
-                                </strong>
+                                <strong>Tecnologia</strong>
 
                                 <small>
                                     Descubra como funciona
@@ -369,23 +290,16 @@
                         </button>
 
 
-
-                        <!-- INTELIGÊNCIA ARTIFICIAL -->
-
                         <button
                             class="suggestion"
                             data-question="Explique o que é inteligência artificial."
                         >
 
-                            <span>
-                                🤖
-                            </span>
+                            <span>🤖</span>
 
                             <div>
 
-                                <strong>
-                                    IA
-                                </strong>
+                                <strong>IA</strong>
 
                                 <small>
                                     Entenda a tecnologia
@@ -395,26 +309,20 @@
 
                         </button>
 
-
                     </div>
 
-
                 </div>
-
 
             </section>
 
 
-
-            <!-- ==========================================
-                 ÁREA DE DIGITAÇÃO
-                 ========================================== -->
+            <!-- ================================= -->
+            <!-- CAMPO DE MENSAGEM -->
+            <!-- ================================= -->
 
             <div class="input-area">
 
-
                 <div class="input-container">
-
 
                     <textarea
                         id="messageInput"
@@ -428,38 +336,23 @@
                         class="send-button"
                         aria-label="Enviar pergunta"
                     >
-
                         ➤
-
                     </button>
-
 
                 </div>
 
 
-                <!-- AVISO -->
-
                 <p class="disclaimer">
-
                     A CCSIA pode cometer erros.
                     Sempre verifique informações importantes.
-
                 </p>
-
 
             </div>
 
-
         </main>
-
 
     </div>
 
-
-
-    <!-- ==========================================
-         JAVASCRIPT
-         ========================================== -->
 
     <script src="script.js"></script>
 
