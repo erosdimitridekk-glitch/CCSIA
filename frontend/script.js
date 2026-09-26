@@ -1,3 +1,7 @@
+/* ================================= */
+/* ELEMENTOS */
+/* ================================= */
+
 const chatContent =
     document.getElementById("chatContent");
 
@@ -9,9 +13,6 @@ const sendButton =
 
 const newChatButton =
     document.getElementById("newChatButton");
-
-const welcome =
-    document.getElementById("welcome");
 
 const themeButton =
     document.getElementById("themeButton");
@@ -33,15 +34,756 @@ const historyList =
 
 
 /* ================================= */
-/* FORMATAÇÃO DA RESPOSTA */
+/* CONFIGURAÇÃO DO HISTÓRICO */
+/* ================================= */
+
+const HISTORY_KEY =
+    "ccsia-conversations";
+
+const CURRENT_KEY =
+    "ccsia-current-conversation";
+
+
+let currentConversationId =
+    localStorage.getItem(
+        CURRENT_KEY
+    );
+
+
+/* ================================= */
+/* GERAR ID */
+/* ================================= */
+
+function generateId() {
+
+    return (
+        Date.now().toString() +
+        "-" +
+        Math.random()
+            .toString(36)
+            .substring(2, 9)
+    );
+
+}
+
+
+/* ================================= */
+/* PEGAR HISTÓRICO */
+/* ================================= */
+
+function getConversations() {
+
+    try {
+
+        const saved =
+            localStorage.getItem(
+                HISTORY_KEY
+            );
+
+
+        if (!saved) {
+            return [];
+        }
+
+
+        return JSON.parse(saved);
+
+    } catch (error) {
+
+        console.error(
+            "Erro ao carregar histórico:",
+            error
+        );
+
+        return [];
+
+    }
+
+}
+
+
+/* ================================= */
+/* SALVAR HISTÓRICO */
+/* ================================= */
+
+function saveConversations(
+    conversations
+) {
+
+    localStorage.setItem(
+        HISTORY_KEY,
+        JSON.stringify(
+            conversations
+        )
+    );
+
+}
+
+
+/* ================================= */
+/* CRIAR TÍTULO */
+/* ================================= */
+
+function createConversationTitle(
+    text
+) {
+
+    let title =
+        text
+            .replace(/\s+/g, " ")
+            .trim();
+
+
+    if (title.length > 35) {
+
+        title =
+            title.substring(
+                0,
+                35
+            ).trim();
+
+        title += "...";
+
+    }
+
+
+    return title;
+
+}
+
+
+/* ================================= */
+/* CRIAR CONVERSA */
+/* ================================= */
+
+function createConversation(
+    firstMessage
+) {
+
+    const conversation = {
+
+        id:
+            generateId(),
+
+        title:
+            createConversationTitle(
+                firstMessage
+            ),
+
+        messages: [],
+
+        createdAt:
+            Date.now(),
+
+        updatedAt:
+            Date.now()
+
+    };
+
+
+    const conversations =
+        getConversations();
+
+
+    conversations.unshift(
+        conversation
+    );
+
+
+    saveConversations(
+        conversations
+    );
+
+
+    currentConversationId =
+        conversation.id;
+
+
+    localStorage.setItem(
+        CURRENT_KEY,
+        currentConversationId
+    );
+
+
+    renderHistory();
+
+
+    return conversation;
+
+}
+
+
+/* ================================= */
+/* PEGAR CONVERSA ATUAL */
+/* ================================= */
+
+function getCurrentConversation() {
+
+    if (!currentConversationId) {
+        return null;
+    }
+
+
+    const conversations =
+        getConversations();
+
+
+    return conversations.find(
+        conversation =>
+            conversation.id ===
+            currentConversationId
+    ) || null;
+
+}
+
+
+/* ================================= */
+/* SALVAR MENSAGEM */
+/* ================================= */
+
+function saveMessage(
+    role,
+    content
+) {
+
+    let conversation =
+        getCurrentConversation();
+
+
+    if (!conversation) {
+
+        if (role === "user") {
+
+            conversation =
+                createConversation(
+                    content
+                );
+
+        } else {
+
+            return;
+
+        }
+
+    }
+
+
+    conversation.messages.push({
+
+        role:
+            role,
+
+        content:
+            content,
+
+        timestamp:
+            Date.now()
+
+    });
+
+
+    conversation.updatedAt =
+        Date.now();
+
+
+    const conversations =
+        getConversations();
+
+
+    const index =
+        conversations.findIndex(
+            item =>
+                item.id ===
+                conversation.id
+        );
+
+
+    if (index !== -1) {
+
+        conversations[index] =
+            conversation;
+
+    }
+
+
+    saveConversations(
+        conversations
+    );
+
+
+    renderHistory();
+
+}
+
+
+/* ================================= */
+/* CARREGAR CONVERSA */
+/* ================================= */
+
+function loadConversation(
+    conversationId
+) {
+
+    const conversations =
+        getConversations();
+
+
+    const conversation =
+        conversations.find(
+            item =>
+                item.id ===
+                conversationId
+        );
+
+
+    if (!conversation) {
+        return;
+    }
+
+
+    currentConversationId =
+        conversation.id;
+
+
+    localStorage.setItem(
+        CURRENT_KEY,
+        currentConversationId
+    );
+
+
+    chatContent.innerHTML = "";
+
+
+    conversation.messages.forEach(
+        message => {
+
+            addMessage(
+                message.content,
+                message.role === "ai"
+                    ? "ai"
+                    : "user"
+            );
+
+        }
+    );
+
+
+    if (
+        conversation.messages.length === 0
+    ) {
+
+        showWelcome();
+
+    }
+
+
+    renderHistory();
+
+    closeMobileMenu();
+
+}
+
+
+/* ================================= */
+/* EXCLUIR CONVERSA */
+/* ================================= */
+
+function deleteConversation(
+    conversationId
+) {
+
+    const conversations =
+        getConversations();
+
+
+    const filtered =
+        conversations.filter(
+            conversation =>
+                conversation.id !==
+                conversationId
+        );
+
+
+    saveConversations(
+        filtered
+    );
+
+
+    if (
+        currentConversationId ===
+        conversationId
+    ) {
+
+        currentConversationId =
+            null;
+
+
+        localStorage.removeItem(
+            CURRENT_KEY
+        );
+
+
+        showWelcome();
+
+    }
+
+
+    renderHistory();
+
+}
+
+
+/* ================================= */
+/* RENDERIZAR HISTÓRICO */
+/* ================================= */
+
+function renderHistory() {
+
+    if (!historyList) {
+        return;
+    }
+
+
+    const conversations =
+        getConversations();
+
+
+    historyList.innerHTML = "";
+
+
+    if (
+        conversations.length === 0
+    ) {
+
+        const empty =
+            document.createElement(
+                "div"
+            );
+
+
+        empty.classList.add(
+            "history-empty"
+        );
+
+
+        empty.textContent =
+            "Nenhuma conversa ainda.";
+
+
+        historyList.appendChild(
+            empty
+        );
+
+
+        return;
+
+    }
+
+
+    conversations.forEach(
+        conversation => {
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+
+            item.classList.add(
+                "history-item"
+            );
+
+
+            if (
+                conversation.id ===
+                currentConversationId
+            ) {
+
+                item.classList.add(
+                    "active"
+                );
+
+            }
+
+
+            const icon =
+                document.createElement(
+                    "span"
+                );
+
+
+            icon.classList.add(
+                "history-icon"
+            );
+
+
+            icon.textContent =
+                "💬";
+
+
+            const name =
+                document.createElement(
+                    "span"
+                );
+
+
+            name.classList.add(
+                "history-name"
+            );
+
+
+            name.textContent =
+                conversation.title;
+
+
+            const deleteButton =
+                document.createElement(
+                    "button"
+                );
+
+
+            deleteButton.classList.add(
+                "history-delete"
+            );
+
+
+            deleteButton.type =
+                "button";
+
+
+            deleteButton.textContent =
+                "🗑️";
+
+
+            deleteButton.title =
+                "Excluir conversa";
+
+
+            deleteButton.addEventListener(
+                "click",
+                function(event) {
+
+                    event.stopPropagation();
+
+
+                    const confirmed =
+                        confirm(
+                            "Excluir esta conversa?"
+                        );
+
+
+                    if (confirmed) {
+
+                        deleteConversation(
+                            conversation.id
+                        );
+
+                    }
+
+                }
+            );
+
+
+            item.appendChild(
+                icon
+            );
+
+
+            item.appendChild(
+                name
+            );
+
+
+            item.appendChild(
+                deleteButton
+            );
+
+
+            item.addEventListener(
+                "click",
+                function() {
+
+                    loadConversation(
+                        conversation.id
+                    );
+
+                }
+            );
+
+
+            historyList.appendChild(
+                item
+            );
+
+        }
+    );
+
+}
+
+
+/* ================================= */
+/* WELCOME */
+/* ================================= */
+
+function showWelcome() {
+
+    chatContent.innerHTML = `
+
+        <div
+            class="welcome"
+            id="welcome"
+        >
+
+            <div class="welcome-icon">
+
+                <img
+                    src="logo.png"
+                    alt="Logo da CCSIA"
+                >
+
+            </div>
+
+
+            <h2>
+                Olá! Eu sou a CCSIA.
+            </h2>
+
+
+            <p>
+                A Inteligência Artificial da
+                <strong>
+                    Caixinha do Saber
+                </strong>.
+            </p>
+
+
+            <span class="welcome-description">
+
+                Faça uma pergunta e comece a aprender.
+
+            </span>
+
+
+            <div class="suggestions">
+
+
+                <button
+                    class="suggestion"
+                    data-question="Explique a matemática de uma forma simples."
+                >
+
+                    <span>
+                        📐
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Matemática
+                        </strong>
+
+                        <small>
+                            Aprenda um conceito
+                        </small>
+
+                    </div>
+
+                </button>
+
+
+                <button
+                    class="suggestion"
+                    data-question="Explique o que foi a Revolução Industrial."
+                >
+
+                    <span>
+                        🌎
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            História
+                        </strong>
+
+                        <small>
+                            Conheça acontecimentos
+                        </small>
+
+                    </div>
+
+                </button>
+
+
+                <button
+                    class="suggestion"
+                    data-question="Explique como funciona a programação para iniciantes."
+                >
+
+                    <span>
+                        💻
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Tecnologia
+                        </strong>
+
+                        <small>
+                            Descubra como funciona
+                        </small>
+
+                    </div>
+
+                </button>
+
+
+                <button
+                    class="suggestion"
+                    data-question="Explique o que é inteligência artificial."
+                >
+
+                    <span>
+                        🤖
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Inteligência Artificial
+                        </strong>
+
+                        <small>
+                            Entenda a tecnologia
+                        </small>
+
+                    </div>
+
+                </button>
+
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* ================================= */
+/* FORMATAÇÃO DA IA */
 /* ================================= */
 
 function formatAIResponse(text) {
 
-    let formatted = text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
+    let formatted =
+        text
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+
 
     formatted =
         formatted.replace(
@@ -49,11 +791,13 @@ function formatAIResponse(text) {
             "<h3>$1</h3>"
         );
 
+
     formatted =
         formatted.replace(
             /^## (.+)$/gm,
             "<h2>$1</h2>"
         );
+
 
     formatted =
         formatted.replace(
@@ -61,11 +805,13 @@ function formatAIResponse(text) {
             "<h1>$1</h1>"
         );
 
+
     formatted =
         formatted.replace(
             /\*\*(.+?)\*\*/g,
             "<strong>$1</strong>"
         );
+
 
     formatted =
         formatted.replace(
@@ -73,11 +819,13 @@ function formatAIResponse(text) {
             "<em>$1</em>"
         );
 
+
     formatted =
         formatted.replace(
             /`([^`]+)`/g,
             "<code>$1</code>"
         );
+
 
     formatted =
         formatted.replace(
@@ -85,16 +833,28 @@ function formatAIResponse(text) {
             "<li>$1</li>"
         );
 
+
     formatted =
         formatted.replace(
             /(<li>.*<\/li>\n?)+/g,
             function(match) {
-                return "<ul>" + match + "</ul>";
+
+                return (
+                    "<ul>" +
+                    match +
+                    "</ul>"
+                );
+
             }
         );
 
+
     formatted =
-        formatted.replace(/\n/g, "<br>");
+        formatted.replace(
+            /\n/g,
+            "<br>"
+        );
+
 
     formatted =
         formatted.replace(
@@ -102,11 +862,13 @@ function formatAIResponse(text) {
             "$1"
         );
 
+
     formatted =
         formatted.replace(
             /<br><ul>/g,
             "<ul>"
         );
+
 
     formatted =
         formatted.replace(
@@ -114,7 +876,9 @@ function formatAIResponse(text) {
             "</ul>"
         );
 
+
     return formatted;
+
 }
 
 
@@ -125,7 +889,10 @@ function formatAIResponse(text) {
 function createAvatar(type) {
 
     const avatar =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     avatar.classList.add(
         "message-avatar",
@@ -134,42 +901,60 @@ function createAvatar(type) {
             : "user-avatar"
     );
 
+
     if (type === "ai") {
 
         const logo =
-            document.createElement("img");
+            document.createElement(
+                "img"
+            );
 
-        logo.src = "logo.png";
+
+        logo.src =
+            "logo.png";
+
 
         logo.alt =
             "Logo da CCSIA";
 
-        avatar.appendChild(logo);
+
+        avatar.appendChild(
+            logo
+        );
 
     } else {
 
-        avatar.textContent = "👤";
+        avatar.textContent =
+            "👤";
 
     }
 
+
     return avatar;
+
 }
 
 
 /* ================================= */
-/* BOTÃO COPIAR */
+/* COPIAR */
 /* ================================= */
 
 function createCopyButton(text) {
 
     const copyButton =
-        document.createElement("button");
+        document.createElement(
+            "button"
+        );
+
 
     copyButton.classList.add(
         "copy-button"
     );
 
-    copyButton.type = "button";
+
+    copyButton.type =
+        "button";
+
 
     copyButton.innerHTML =
         "📋 Copiar";
@@ -184,8 +969,10 @@ function createCopyButton(text) {
                 await navigator.clipboard
                     .writeText(text);
 
+
                 copyButton.innerHTML =
                     "✓ Copiado!";
+
 
                 copyButton.classList.add(
                     "copied"
@@ -206,10 +993,11 @@ function createCopyButton(text) {
                     2000
                 );
 
+
             } catch (error) {
 
                 console.error(
-                    "Não foi possível copiar:",
+                    "Erro ao copiar:",
                     error
                 );
 
@@ -232,113 +1020,9 @@ function createCopyButton(text) {
         }
     );
 
+
     return copyButton;
-}
 
-
-/* ================================= */
-/* ENVIAR MENSAGEM */
-/* ================================= */
-
-async function sendMessage() {
-
-    const message =
-        messageInput.value.trim();
-
-
-    if (!message) return;
-
-
-    if (welcome) {
-        welcome.remove();
-    }
-
-
-    addMessage(
-        message,
-        "user"
-    );
-
-
-    messageInput.value = "";
-
-    resetTextarea();
-
-    sendButton.disabled = true;
-
-
-    const loadingMessage =
-        addLoadingMessage();
-
-
-    try {
-
-        const response =
-            await fetch(
-                "/api/chat",
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
-
-                    body:
-                        JSON.stringify({
-                            message: message
-                        })
-                }
-            );
-
-
-        const data =
-            await response.json();
-
-
-        loadingMessage.remove();
-
-
-        if (!response.ok) {
-
-            addMessage(
-                "Desculpe, ocorreu um erro ao falar com a CCSIA.",
-                "ai"
-            );
-
-            console.error(data);
-
-            return;
-        }
-
-
-        await addTypingMessage(
-            data.answer,
-            "ai"
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Erro:",
-            error
-        );
-
-        loadingMessage.remove();
-
-
-        await addTypingMessage(
-            "Não consegui conectar ao servidor da CCSIA. Verifique se o servidor está funcionando.",
-            "ai"
-        );
-
-
-    } finally {
-
-        sendButton.disabled = false;
-
-    }
 }
 
 
@@ -346,10 +1030,17 @@ async function sendMessage() {
 /* ADICIONAR MENSAGEM */
 /* ================================= */
 
-function addMessage(text, type) {
+function addMessage(
+    text,
+    type,
+    save = false
+) {
 
     const message =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     message.classList.add(
         "message",
@@ -362,7 +1053,10 @@ function addMessage(text, type) {
 
 
     const content =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     content.classList.add(
         "message-content"
@@ -370,11 +1064,15 @@ function addMessage(text, type) {
 
 
     const name =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     name.classList.add(
         "message-name"
     );
+
 
     name.textContent =
         type === "ai"
@@ -383,7 +1081,10 @@ function addMessage(text, type) {
 
 
     const textElement =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     textElement.classList.add(
         "message-text"
@@ -393,7 +1094,9 @@ function addMessage(text, type) {
     if (type === "ai") {
 
         textElement.innerHTML =
-            formatAIResponse(text);
+            formatAIResponse(
+                text
+            );
 
     } else {
 
@@ -403,40 +1106,65 @@ function addMessage(text, type) {
     }
 
 
-    content.appendChild(name);
+    content.appendChild(
+        name
+    );
 
-    content.appendChild(textElement);
+
+    content.appendChild(
+        textElement
+    );
 
 
     if (type === "ai") {
 
-        const copyButton =
-            createCopyButton(text);
-
         content.appendChild(
-            copyButton
+            createCopyButton(
+                text
+            )
         );
 
     }
 
 
-    message.appendChild(avatar);
+    message.appendChild(
+        avatar
+    );
 
-    message.appendChild(content);
 
-    chatContent.appendChild(message);
+    message.appendChild(
+        content
+    );
+
+
+    chatContent.appendChild(
+        message
+    );
 
 
     chatContent.scrollTop =
         chatContent.scrollHeight;
 
 
+    if (save) {
+
+        saveMessage(
+            type === "ai"
+                ? "ai"
+                : "user",
+            text
+        );
+
+    }
+
+
     return message;
+
 }
 
 
 /* ================================= */
-/* EFEITO DIGITANDO */
+/* DIGITAÇÃO DA IA */
 /* ================================= */
 
 async function addTypingMessage(
@@ -445,7 +1173,10 @@ async function addTypingMessage(
 ) {
 
     const message =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     message.classList.add(
         "message",
@@ -458,7 +1189,10 @@ async function addTypingMessage(
 
 
     const content =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     content.classList.add(
         "message-content"
@@ -466,41 +1200,62 @@ async function addTypingMessage(
 
 
     const name =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     name.classList.add(
         "message-name"
     );
+
 
     name.textContent =
         "CCSIA";
 
 
     const textElement =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     textElement.classList.add(
         "message-text"
     );
 
 
-    content.appendChild(name);
+    content.appendChild(
+        name
+    );
+
 
     content.appendChild(
         textElement
     );
 
 
-    message.appendChild(avatar);
-
-    message.appendChild(content);
-
-    chatContent.appendChild(message);
+    message.appendChild(
+        avatar
+    );
 
 
-    let currentText = "";
+    message.appendChild(
+        content
+    );
 
-    const speed = 12;
+
+    chatContent.appendChild(
+        message
+    );
+
+
+    let currentText =
+        "";
+
+
+    const speed =
+        12;
 
 
     for (
@@ -509,7 +1264,8 @@ async function addTypingMessage(
         i++
     ) {
 
-        currentText += text[i];
+        currentText +=
+            text[i];
 
 
         textElement.innerHTML =
@@ -533,12 +1289,16 @@ async function addTypingMessage(
     }
 
 
-    const copyButton =
-        createCopyButton(text);
-
-
     content.appendChild(
-        copyButton
+        createCopyButton(
+            text
+        )
+    );
+
+
+    saveMessage(
+        "ai",
+        text
     );
 
 
@@ -547,6 +1307,7 @@ async function addTypingMessage(
 
 
     return message;
+
 }
 
 
@@ -557,7 +1318,10 @@ async function addTypingMessage(
 function addLoadingMessage() {
 
     const message =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     message.classList.add(
         "message",
@@ -566,11 +1330,16 @@ function addLoadingMessage() {
 
 
     const avatar =
-        createAvatar("ai");
+        createAvatar(
+            "ai"
+        );
 
 
     const content =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     content.classList.add(
         "message-content"
@@ -578,18 +1347,25 @@ function addLoadingMessage() {
 
 
     const name =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     name.classList.add(
         "message-name"
     );
+
 
     name.textContent =
         "CCSIA";
 
 
     const text =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     text.classList.add(
         "message-text"
@@ -597,7 +1373,10 @@ function addLoadingMessage() {
 
 
     const typing =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     typing.classList.add(
         "typing"
@@ -611,24 +1390,46 @@ function addLoadingMessage() {
     ) {
 
         const dot =
-            document.createElement("span");
+            document.createElement(
+                "span"
+            );
 
-        typing.appendChild(dot);
+
+        typing.appendChild(
+            dot
+        );
 
     }
 
 
-    text.appendChild(typing);
+    text.appendChild(
+        typing
+    );
 
-    content.appendChild(name);
 
-    content.appendChild(text);
+    content.appendChild(
+        name
+    );
 
-    message.appendChild(avatar);
 
-    message.appendChild(content);
+    content.appendChild(
+        text
+    );
 
-    chatContent.appendChild(message);
+
+    message.appendChild(
+        avatar
+    );
+
+
+    message.appendChild(
+        content
+    );
+
+
+    chatContent.appendChild(
+        message
+    );
 
 
     chatContent.scrollTop =
@@ -636,6 +1437,150 @@ function addLoadingMessage() {
 
 
     return message;
+
+}
+
+
+/* ================================= */
+/* ENVIAR */
+/* ================================= */
+
+async function sendMessage() {
+
+    const message =
+        messageInput.value.trim();
+
+
+    if (!message) {
+        return;
+    }
+
+
+    const existingWelcome =
+        document.getElementById(
+            "welcome"
+        );
+
+
+    if (existingWelcome) {
+
+        existingWelcome.remove();
+
+    }
+
+
+    /*
+       Salva a pergunta.
+       Se não existir conversa,
+       cria automaticamente.
+    */
+
+    addMessage(
+        message,
+        "user",
+        true
+    );
+
+
+    messageInput.value =
+        "";
+
+
+    resetTextarea();
+
+
+    sendButton.disabled =
+        true;
+
+
+    const loadingMessage =
+        addLoadingMessage();
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/chat",
+                {
+
+                    method:
+                        "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            message:
+                                message
+
+                        })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        loadingMessage.remove();
+
+
+        if (!response.ok) {
+
+            addMessage(
+                "Desculpe, ocorreu um erro ao falar com a CCSIA.",
+                "ai"
+            );
+
+
+            console.error(
+                data
+            );
+
+
+            return;
+
+        }
+
+
+        await addTypingMessage(
+            data.answer,
+            "ai"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Erro:",
+            error
+        );
+
+
+        loadingMessage.remove();
+
+
+        await addTypingMessage(
+            "Não consegui conectar ao servidor da CCSIA. Verifique se o servidor está funcionando.",
+            "ai"
+        );
+
+
+    } finally {
+
+        sendButton.disabled =
+            false;
+
+    }
+
 }
 
 
@@ -675,6 +1620,7 @@ messageInput.addEventListener(
         this.style.height =
             "auto";
 
+
         this.style.height =
             Math.min(
                 this.scrollHeight,
@@ -689,6 +1635,7 @@ function resetTextarea() {
 
     messageInput.style.height =
         "auto";
+
 }
 
 
@@ -706,7 +1653,9 @@ document.addEventListener(
             );
 
 
-        if (!suggestion) return;
+        if (!suggestion) {
+            return;
+        }
 
 
         const question =
@@ -732,210 +1681,39 @@ document.addEventListener(
 /* NOVA CONVERSA */
 /* ================================= */
 
-if (newChatButton) {
+newChatButton.addEventListener(
+    "click",
+    function() {
 
-    newChatButton.addEventListener(
-        "click",
-        function() {
-
-            chatContent.innerHTML = `
-                <div
-                    class="welcome"
-                    id="welcome"
-                >
-
-                    <div class="welcome-icon">
-
-                        <img
-                            src="logo.png"
-                            alt="Logo da CCSIA"
-                        >
-
-                    </div>
-
-                    <h2>
-                        Olá! Eu sou a CCSIA.
-                    </h2>
-
-                    <p>
-                        A Inteligência Artificial da
-                        <strong>Caixinha do Saber</strong>.
-                    </p>
-
-                    <span class="welcome-description">
-                        Faça uma pergunta e comece a aprender.
-                    </span>
-
-                    <div class="suggestions">
-
-                        <button
-                            class="suggestion"
-                            data-question="Explique a matemática de uma forma simples."
-                        >
-                            <span>📐</span>
-
-                            <div>
-                                <strong>Matemática</strong>
-                                <small>
-                                    Aprenda um conceito
-                                </small>
-                            </div>
-                        </button>
-
-                        <button
-                            class="suggestion"
-                            data-question="Explique o que foi a Revolução Industrial."
-                        >
-                            <span>🌎</span>
-
-                            <div>
-                                <strong>História</strong>
-                                <small>
-                                    Conheça acontecimentos
-                                </small>
-                            </div>
-                        </button>
-
-                        <button
-                            class="suggestion"
-                            data-question="Explique como funciona a programação para iniciantes."
-                        >
-                            <span>💻</span>
-
-                            <div>
-                                <strong>Tecnologia</strong>
-                                <small>
-                                    Descubra como funciona
-                                </small>
-                            </div>
-                        </button>
-
-                        <button
-                            class="suggestion"
-                            data-question="Explique o que é inteligência artificial."
-                        >
-                            <span>🤖</span>
-
-                            <div>
-                                <strong>IA</strong>
-                                <small>
-                                    Entenda a tecnologia
-                                </small>
-                            </div>
-                        </button>
-
-                    </div>
-
-                </div>
-            `;
+        currentConversationId =
+            null;
 
 
-            messageInput.value = "";
-
-            resetTextarea();
-
-            closeMobileMenu();
-
-            messageInput.focus();
-
-        }
-    );
-
-}
-
-
-/* ================================= */
-/* MODO ESCURO */
-/* ================================= */
-
-if (themeButton) {
-
-    function updateThemeButton() {
-
-        const darkMode =
-            document.body.classList
-                .contains("dark-mode");
-
-
-        if (darkMode) {
-
-            themeButton.textContent =
-                "☀️";
-
-            themeButton.title =
-                "Modo claro";
-
-            themeButton.setAttribute(
-                "aria-label",
-                "Ativar modo claro"
-            );
-
-        } else {
-
-            themeButton.textContent =
-                "🌙";
-
-            themeButton.title =
-                "Modo escuro";
-
-            themeButton.setAttribute(
-                "aria-label",
-                "Ativar modo escuro"
-            );
-
-        }
-
-    }
-
-
-    themeButton.addEventListener(
-        "click",
-        function() {
-
-            document.body.classList.toggle(
-                "dark-mode"
-            );
-
-
-            const darkMode =
-                document.body.classList
-                    .contains("dark-mode");
-
-
-            localStorage.setItem(
-                "ccsia-theme",
-                darkMode
-                    ? "dark"
-                    : "light"
-            );
-
-
-            updateThemeButton();
-
-        }
-    );
-
-
-    const savedTheme =
-        localStorage.getItem(
-            "ccsia-theme"
+        localStorage.removeItem(
+            CURRENT_KEY
         );
 
 
-    if (
-        savedTheme === "dark"
-    ) {
+        showWelcome();
 
-        document.body.classList.add(
-            "dark-mode"
-        );
+
+        renderHistory();
+
+
+        closeMobileMenu();
+
+
+        messageInput.value =
+            "";
+
+
+        resetTextarea();
+
+
+        messageInput.focus();
 
     }
-
-
-    updateThemeButton();
-
-}
+);
 
 
 /* ================================= */
@@ -944,66 +1722,144 @@ if (themeButton) {
 
 function openMobileMenu() {
 
-    if (!sidebar) return;
-
     sidebar.classList.add(
         "mobile-open"
     );
+
 
     menuOverlay.classList.add(
         "active"
     );
 
-    document.body.style.overflow =
-        "hidden";
 }
 
 
 function closeMobileMenu() {
 
-    if (!sidebar) return;
-
     sidebar.classList.remove(
         "mobile-open"
     );
+
 
     menuOverlay.classList.remove(
         "active"
     );
 
-    document.body.style.overflow =
-        "hidden";
 }
 
 
-if (menuButton) {
+menuButton.addEventListener(
+    "click",
+    openMobileMenu
+);
 
-    menuButton.addEventListener(
-        "click",
-        openMobileMenu
+
+closeMenuButton.addEventListener(
+    "click",
+    closeMobileMenu
+);
+
+
+menuOverlay.addEventListener(
+    "click",
+    closeMobileMenu
+);
+
+
+/* ================================= */
+/* MODO ESCURO */
+/* ================================= */
+
+function updateThemeButton() {
+
+    const darkMode =
+        document.body.classList
+            .contains("dark-mode");
+
+
+    if (darkMode) {
+
+        themeButton.textContent =
+            "☀️";
+
+
+        themeButton.title =
+            "Modo claro";
+
+
+        themeButton.setAttribute(
+            "aria-label",
+            "Ativar modo claro"
+        );
+
+    } else {
+
+        themeButton.textContent =
+            "🌙";
+
+
+        themeButton.title =
+            "Modo escuro";
+
+
+        themeButton.setAttribute(
+            "aria-label",
+            "Ativar modo escuro"
+        );
+
+    }
+
+}
+
+
+themeButton.addEventListener(
+    "click",
+    function() {
+
+        document.body.classList.toggle(
+            "dark-mode"
+        );
+
+
+        const darkMode =
+            document.body.classList
+                .contains("dark-mode");
+
+
+        localStorage.setItem(
+            "ccsia-theme",
+            darkMode
+                ? "dark"
+                : "light"
+        );
+
+
+        updateThemeButton();
+
+    }
+);
+
+
+/* CARREGAR TEMA */
+
+const savedTheme =
+    localStorage.getItem(
+        "ccsia-theme"
+    );
+
+
+if (
+    savedTheme === "dark"
+) {
+
+    document.body.classList.add(
+        "dark-mode"
     );
 
 }
 
 
-if (closeMenuButton) {
-
-    closeMenuButton.addEventListener(
-        "click",
-        closeMobileMenu
-    );
-
-}
-
-
-if (menuOverlay) {
-
-    menuOverlay.addEventListener(
-        "click",
-        closeMobileMenu
-    );
-
-}
+updateThemeButton();
 
 
 /* ================================= */
@@ -1020,11 +1876,76 @@ document.addEventListener(
             event.key.toLowerCase() === "d"
         ) {
 
-            if (!themeButton) return;
-
             themeButton.click();
 
         }
 
     }
 );
+
+
+/* ================================= */
+/* CARREGAR CONVERSA AO ABRIR SITE */
+/* ================================= */
+
+function loadSavedConversation() {
+
+    if (!currentConversationId) {
+
+        renderHistory();
+
+        return;
+
+    }
+
+
+    const conversation =
+        getCurrentConversation();
+
+
+    if (!conversation) {
+
+        currentConversationId =
+            null;
+
+
+        localStorage.removeItem(
+            CURRENT_KEY
+        );
+
+
+        renderHistory();
+
+        return;
+
+    }
+
+
+    chatContent.innerHTML =
+        "";
+
+
+    conversation.messages.forEach(
+        message => {
+
+            addMessage(
+                message.content,
+                message.role === "ai"
+                    ? "ai"
+                    : "user"
+            );
+
+        }
+    );
+
+
+    renderHistory();
+
+}
+
+
+/* ================================= */
+/* INICIALIZAÇÃO */
+/* ================================= */
+
+loadSavedConversation();
